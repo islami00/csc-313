@@ -1,17 +1,22 @@
 <?php
-$message =  null;
 
-if (isset($_POST['submit'])) {
-  if (!empty($_FILES['upload']['name'])) {
-    $file_name =  $_FILES["upload"]["name"];
-    $file_size =  $_FILES["upload"]["size"];
-    $file_tmp_name =  $_FILES["upload"]["tmp_name"];
-    
-  } else {
-    $message =  "Please choose a file";
-  }
+$host =  'localhost';
+$user = 'root';
+// $password = '123456';
+$dbname = 'project_test';
+// Set DSN
+$dsn = "mysql:host=${host};dbname=${dbname}";
+// Create a PDO instance
+$pdo = new PDO($dsn, $user);
+$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+# PRDO QUERY
+// INSERT INSERT INTO files VALUES (DEFAULT,'?name','?path','?level'); 
+$stmt = $pdo->query('SELECT * FROM files');
+while ($row = $stmt->fetch()) {
+  echo $row->title . $row->path . $row->level .  $row->id . '<br>';
+  var_dump($row);
 }
-
 
 ?>
 <!DOCTYPE html>
@@ -25,9 +30,8 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-  <p hidden="<?php !$message ?>"><?php echo $message ?></p>
-  <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-    <input maxlength="" type="file" name="upload" id="" required>
+  <form enctype="multipart/form-data" action="./do_upload.php" method="post">
+    <input maxlength="" type="file" name="upload" id="">
     <input type="submit" name="Submit" value="submit">
   </form>
 </body>
