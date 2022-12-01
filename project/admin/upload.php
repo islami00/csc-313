@@ -1,5 +1,17 @@
 <?php
+require('../vendor/autoload.php');
 
+$message = null;
+
+use Rakit\Validation\Validator;
+// https://github.com/rakit/validation
+$validator = new Validator;
+
+$rules = [
+  'upload' => 'required|uploaded_file:1,500K,png,jpeg,pdf',
+  "submit" => "required"
+];
+$validation = $validator->make($_POST + $_FILES, $rules);
 $host =  'localhost';
 $user = 'root';
 // $password = '123456';
@@ -13,10 +25,26 @@ $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 # PRDO QUERY
 // INSERT INSERT INTO files VALUES (DEFAULT,'?name','?path','?level'); 
 $stmt = $pdo->query('SELECT * FROM files');
-while ($row = $stmt->fetch()) {
-  echo $row->title . $row->path . $row->level .  $row->id . '<br>';
-  var_dump($row);
+// while ($row = $stmt->fetch()) {
+//   echo $row->title . $row->path . $row->level .  $row->id . '<br>';
+//   var_dump($row);
+// }
+
+function do_validate()
+{
+  if (empty($_POST['submit'])) return;
+  global $validation, $message;
+  $validation->validate();
+
+  if (
+    $validation->fails()
+  ) {
+    var_dump($validation->errors()->get("upload"));
+  } else {
+    $message = "<p>File uploaded successfully! you will be redirected in 5 seconds...</p>";
+  }
 }
+do_validate();
 
 ?>
 <!DOCTYPE html>
@@ -30,9 +58,10 @@ while ($row = $stmt->fetch()) {
 </head>
 
 <body>
-  <form enctype="multipart/form-data" action="./do_upload.php" method="post">
+  <p><?php $message ?></p>
+  <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
     <input maxlength="" type="file" name="upload" id="">
-    <input type="submit" name="Submit" value="submit">
+    <input type="submit" name="submit" value="submit">
   </form>
 </body>
 
