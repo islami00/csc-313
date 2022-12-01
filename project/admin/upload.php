@@ -35,8 +35,13 @@ function do_upload()
   $file_name = $_FILES['upload']['name'];
   $file_size = $_FILES['upload']['size'];
   $file_tmp = $_FILES['upload']['tmp_name'];
-  $target_dir = "uploads/${file_name}";
+  $upload_dir = "uploads";
+  $target_dir = "${upload_dir}/${file_name}";
   echo $target_dir;
+
+  if (!file_exists($upload_dir)) mkdir($upload_dir);
+  move_uploaded_file($file_tmp, $target_dir);
+  
 }
 function do_validate()
 {
