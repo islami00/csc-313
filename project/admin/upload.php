@@ -30,6 +30,14 @@ $stmt = $pdo->query('SELECT * FROM files');
 //   var_dump($row);
 // }
 
+function do_upload()
+{
+  $file_name = $_FILES['upload']['name'];
+  $file_size = $_FILES['upload']['size'];
+  $file_tmp = $_FILES['upload']['tmp_name'];
+  $target_dir = "uploads/${file_name}";
+  echo $target_dir;
+}
 function do_validate()
 {
   if (empty($_POST['submit'])) return;
@@ -41,7 +49,9 @@ function do_validate()
   ) {
     var_dump($validation->errors()->get("upload"));
   } else {
-    $message = "<p>File uploaded successfully! you will be redirected in 5 seconds...</p>";
+
+    do_upload();
+    $message = "<p>File uploaded successfully!</p>";
   }
 }
 do_validate();
@@ -58,7 +68,7 @@ do_validate();
 </head>
 
 <body>
-  <p><?php $message ?></p>
+  <p><?php echo $message ?></p>
   <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
     <input maxlength="" type="file" name="upload" id="">
     <input type="submit" name="submit" value="submit">
