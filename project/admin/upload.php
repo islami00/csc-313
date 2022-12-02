@@ -1,28 +1,17 @@
 <?php
+
+include './db_conn.php';
+
 require '../vendor/autoload.php';
-
-$message = null;
-
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
 $validator = new Validator();
-
 $rules = [
   'upload' => 'required|uploaded_file:1,500K,png,jpeg,pdf',
   'submit' => 'required',
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
-$host = 'localhost';
-$user = 'root';
-// $password = '123456';
-$dbname = 'project_test';
-// Set DSN
-$dsn = "mysql:host=${host};dbname=${dbname}";
 
-// Create a PDO instance
-$connection = new PDO($dsn, $user);
-$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 function add_to_db($file_name, $target_path, $level)
 {
   global $connection;
@@ -50,6 +39,7 @@ function do_upload()
   return add_to_db($file_name, $target_path, 'beginner');
 }
 
+$message = null;
 function do_validate()
 {
   if (empty($_POST['submit'])) {
