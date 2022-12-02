@@ -1,66 +1,72 @@
 <?php
-require('../vendor/autoload.php');
+require '../vendor/autoload.php';
 
 $message = null;
 
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
-$validator = new Validator;
+$validator = new Validator();
 
 $rules = [
   'upload' => 'required|uploaded_file:1,500K,png,jpeg,pdf',
-  "submit" => "required"
+  'submit' => 'required',
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
-$host =  'localhost';
+$host = 'localhost';
 $user = 'root';
 // $password = '123456';
 $dbname = 'project_test';
 // Set DSN
 $dsn = "mysql:host=${host};dbname=${dbname}";
+
 // Create a PDO instance
-$pdo = new PDO($dsn, $user);
-$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-# PRDO QUERY
-// INSERT INSERT INTO files VALUES (DEFAULT,'?name','?path','?level'); 
-$stmt = $pdo->query('SELECT * FROM files');
-// while ($row = $stmt->fetch()) {
-//   echo $row->title . $row->path . $row->level .  $row->id . '<br>';
-//   var_dump($row);
-// }
+$connection = new PDO($dsn, $user);
+$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
+$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+function add_to_db($file_name, $target_path, $level)
+{
+  global $connection;
+  // PRDO QUERY
+  $sql = 'INSERT INTO files VALUES (DEFAULT, :title, :path, :level);';
+  $stmt = $connection->prepare($sql);
+  $result = false;
+  if ($stmt) {
+    $result = $stmt->execute([':title' => $file_name, ':path' => $target_path, ':level' => $level]);
+  }
+  return $result;
+}
 
 function do_upload()
 {
   $file_name = $_FILES['upload']['name'];
   $file_size = $_FILES['upload']['size'];
   $file_tmp = $_FILES['upload']['tmp_name'];
-  $upload_dir = "uploads";
-  $target_dir = "${upload_dir}/${file_name}";
-  echo $target_dir;
-
-  if (!file_exists($upload_dir)) mkdir($upload_dir);
-  move_uploaded_file($file_tmp, $target_dir);
-  
+  $upload_dir = 'uploads';
+  $target_path = "${upload_dir}/${file_name}";
+  echo $target_path;
+  if (!file_exists($upload_dir)) {
+    mkdir($upload_dir);
+  }
+  move_uploaded_file($file_tmp, $target_path);
+  add_to_db($file_name, $target_path, 'beginner');
 }
+
 function do_validate()
 {
-  if (empty($_POST['submit'])) return;
+  if (empty($_POST['submit'])) {
+    return;
+  }
   global $validation, $message;
   $validation->validate();
 
-  if (
-    $validation->fails()
-  ) {
-    var_dump($validation->errors()->get("upload"));
+  if ($validation->fails()) {
+    var_dump($validation->errors()->get('upload'));
   } else {
-
     do_upload();
-    $message = "<p>File uploaded successfully!</p>";
+    $message = '<p>File uploaded successfully!</p>';
   }
 }
 do_validate();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,8 +79,8 @@ do_validate();
 </head>
 
 <body>
-  <p><?php echo $message ?></p>
-  <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+  <p><?php echo $message; ?></p>
+  <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
     <input maxlength="" type="file" name="upload" id="">
     <input type="submit" name="submit" value="submit">
   </form>
