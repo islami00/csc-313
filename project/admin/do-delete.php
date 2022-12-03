@@ -36,7 +36,7 @@ function do_validate()
   }
   $validation->validate();
   if ($validation->fails()) {
-    // var_dump($validation->errors()->get('upload'));
+    var_dump($validation->errors()->all());
     return '<p>Error on input validation</p>';
   }
 
@@ -54,7 +54,6 @@ $stmt->execute();
 $result = $stmt->fetchAll();
 ?>
 
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -84,7 +83,7 @@ $result = $stmt->fetchAll();
     <dialog id="modal">
       <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
         <input hidden type="number" name="id">
-        <button class="close-btn" type="submit" value="submit" name="submit">
+        <button type="submit" value="submit" name="submit">
           Accept
         </button>
         <button class="cancel-btn" type="button">Cancel</button>
@@ -93,7 +92,8 @@ $result = $stmt->fetchAll();
   </ul>
   <script>
     const buttons = document.querySelectorAll(".delete-btn");
-    const closeBtns = document.querySelectorAll(".cancel-btn, .close-btn");
+    const cancelBtn = document.querySelector("#modal .cancel-btn");
+    const submitBtn = document.querySelector('#modal button[type="submit"]');
 
     const modal = document.querySelector(`#modal`);
     const idInput = document.querySelector('input[name="id"]');
@@ -104,12 +104,17 @@ $result = $stmt->fetchAll();
         modal.showModal();
       });
     });
-    closeBtns.forEach((closeBtn) => {
-      closeBtn.addEventListener("click", () => {
-        idInput.value = "";
-        modal.close();
-      });
-    });
+    cancelBtn.addEventListener("click", doClose);
+    submitBtn.addEventListener("click", closeModal)
+
+    function doClose() {
+      idInput.value = "";
+      closeModal();
+    }
+
+    function closeModal() {
+      modal.close();
+    }
   </script>
 </body>
 
