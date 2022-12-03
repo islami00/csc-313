@@ -37,7 +37,7 @@ function do_validate()
   $validation->validate();
   if ($validation->fails()) {
     // var_dump($validation->errors()->get('upload'));
-    return '<p>Error on file validation</p>';
+    return '<p>Error on input validation</p>';
   }
 
   $success = do_upload();
@@ -78,33 +78,35 @@ $result = $stmt->fetchAll();
         ?>
         <a download="<?php echo $title ?>" href="<?php echo $link ?>"><?php echo $title ?></a>
         <button type="button" class="delete-btn" data-modalid="<?php echo $key ?>">Delete</button>
-        <dialog id="modal-<?php echo $key ?>">
-          <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
-            <input hidden type="number" name="id" value="<?php echo $key ?>">
-            <button class="close-btn" type="submit" value="submit" name="submit" data-modalid="<?php echo $key ?>">
-              Accept
-            </button>
-            <button class="close-btn" type="button" data-modalid="<?php echo $key ?>">Cancel</button>
-          </form>
-        </dialog>
+
       </li>
     <?php endforeach ?>
-
+    <dialog id="modal">
+      <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
+        <input hidden type="number" name="id">
+        <button class="close-btn" type="submit" value="submit" name="submit">
+          Accept
+        </button>
+        <button class="cancel-btn" type="button">Cancel</button>
+      </form>
+    </dialog>
   </ul>
   <script>
     const buttons = document.querySelectorAll(".delete-btn");
-    const closeBtns = document.querySelectorAll(".close-btn");
+    const closeBtns = document.querySelectorAll(".cancel-btn, .close-btn");
+
+    const modal = document.querySelector(`#modal`);
+    const idInput = document.querySelector('input[name="id"]');
     buttons.forEach((button) => {
-      button.addEventListener(("click"), () => {
+      button.addEventListener("click", () => {
         const id = button.dataset.modalid;
-        const modal = document.querySelector(`#modal-${id}`);
+        idInput.value = `${id}`;
         modal.showModal();
       });
     });
-    closeBtns.forEach((button) => {
-      button.addEventListener(("click"), () => {
-        const id = button.dataset.modalid;
-        const modal = document.querySelector(`#modal-${id}`);
+    closeBtns.forEach((closeBtn) => {
+      closeBtn.addEventListener("click", () => {
+        idInput.value = "";
         modal.close();
       });
     });
