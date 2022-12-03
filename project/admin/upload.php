@@ -7,7 +7,7 @@ use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
 $validator = new Validator();
 $rules = [
-  'upload' => 'required|uploaded_file:1,500K,png,jpeg,pdf',
+  'upload' => ['required', 'mimes:png,jpeg,pdf', "max:2M"],
   'submit' => 'required',
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
@@ -42,12 +42,12 @@ function do_upload()
 $message = null;
 function do_validate()
 {
-  if (empty($_POST['submit'])) {
-    return;
-  }
-  global $validation, $message;
-  $validation->validate();
 
+  global $validation, $message;
+  if (empty($_POST['submit'])) {
+    return null;
+  }
+  $validation->validate();
   if ($validation->fails()) {
     // var_dump($validation->errors()->get('upload'));
     $message = '<p>Error on file validation</p>';
