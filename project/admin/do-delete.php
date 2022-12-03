@@ -48,6 +48,10 @@ function do_validate()
   }
 }
 $message = do_validate();
+$sql = 'SELECT * FROM `files`';
+$stmt = $connection->prepare($sql);
+$stmt->execute();
+$result = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -57,22 +61,54 @@ $message = do_validate();
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Show All</title>
+  <title>Delete</title>
 </head>
 
 <body>
   <?php if ($message !== null) : ?>
     <p><?php echo $message; ?></p>
   <?php endif ?>
-  <?php foreach ($result as $key => $value) : ?>
-    <?php
-    $title =  $value->title;
-    $path =  $value->path;
-    $link =  "./admin/${path}";
-    ?>
-    <a download="<?php echo $title ?>" href="<?php echo $link ?>"><?php echo $title ?></a>
-    <br>
-  <?php endforeach ?>
+  <ul>
+    <?php foreach ($result as $key => $value) : ?>
+      <li>
+        <?php
+        $title =  $value->title;
+        $path =  $value->path;
+        $link =  $path;
+        ?>
+        <a download="<?php echo $title ?>" href="<?php echo $link ?>"><?php echo $title ?></a>
+        <button type="button" class="delete-btn" data-modalid="<?php echo $key ?>">Delete</button>
+        <dialog id="modal-<?php echo $key ?>">
+          <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
+            <input hidden type="number" name="id" value="<?php echo $key ?>">
+            <button class="close-btn" type="submit" value="submit" name="submit" data-modalid="<?php echo $key ?>">
+              Accept
+            </button>
+            <button class="close-btn" type="button" data-modalid="<?php echo $key ?>">Cancel</button>
+          </form>
+        </dialog>
+      </li>
+    <?php endforeach ?>
+
+  </ul>
+  <script>
+    const buttons = document.querySelectorAll(".delete-btn");
+    const closeBtns = document.querySelectorAll(".close-btn");
+    buttons.forEach((button) => {
+      button.addEventListener(("click"), () => {
+        const id = button.dataset.modalid;
+        const modal = document.querySelector(`#modal-${id}`);
+        modal.showModal();
+      });
+    });
+    closeBtns.forEach((button) => {
+      button.addEventListener(("click"), () => {
+        const id = button.dataset.modalid;
+        const modal = document.querySelector(`#modal-${id}`);
+        modal.close();
+      });
+    });
+  </script>
 </body>
 
 </html>
