@@ -353,6 +353,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="../dist/js/adminlte.min.js"></script>
   </body>
 
+
   </html>
 <?php else : ?>
   <?php header('location: ' . URLROOT . '/students'); ?>
