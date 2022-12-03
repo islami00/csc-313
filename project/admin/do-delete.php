@@ -8,13 +8,15 @@ use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
 $validator = new Validator();
 $rules = [
-  'id' => ["required", "numeric", "min:1"],
+  'id' => ["required", "numeric"],
   'submit' => 'required',
 ];
 
 $validation = $validator->make($_POST + $_FILES, $rules);
 /**
  * @param number $id
+ * 
+ * Choose not to delete it from uploads because we acn have rm '/' like that.
  */
 function do_delete($id)
 {
@@ -36,18 +38,20 @@ function do_validate()
   }
   $validation->validate();
   if ($validation->fails()) {
-    var_dump($validation->errors()->all());
-    return '<p>Error on input validation</p>';
+    var_dump($validation->errors()->all("<p>:message</p>"));
+    return ['<p>Error on input validation</p>'];
   }
-
-  $success = do_upload();
+  $id =  $_POST['id'];
+  if (!is_finite($id)) return ['<p>Error on file deletion, invalid file id</p>'];
+  $success = do_delete($id);
   if ($success) {
-    return '<p>File uploaded successfully!</p>';
+    return ['<p>File deleted successfully!</p>'];
   } else {
-    return '<p>Error on file upload</p>';
+    return ['<p>Error on file delete</p>'];
   }
 }
-$message = do_validate();
+
+$messages  = do_validate();
 $sql = 'SELECT * FROM `files`';
 $stmt = $connection->prepare($sql);
 $stmt->execute();
@@ -64,16 +68,20 @@ $result = $stmt->fetchAll();
 </head>
 
 <body>
-  <?php if ($message !== null) : ?>
-    <p><?php echo $message; ?></p>
+  <?php if ($messages  !== null) : ?>
+    <?php foreach ($messages as $message) {
+      echo $message;
+    }
+    ?>
   <?php endif ?>
   <ul>
-    <?php foreach ($result as $key => $value) : ?>
+    <?php foreach ($result as  $value) : ?>
       <li>
         <?php
         $title =  $value->title;
         $path =  $value->path;
         $link =  $path;
+        $key =  $value->id;
         ?>
         <a download="<?php echo $title ?>" href="<?php echo $link ?>"><?php echo $title ?></a>
         <button type="button" class="delete-btn" data-modalid="<?php echo $key ?>">Delete</button>
