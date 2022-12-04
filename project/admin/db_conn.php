@@ -10,7 +10,8 @@ $dsn = "mysql:host=${host};dbname=${dbname}";
 $connection = new PDO($dsn, $user);
 $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
+// INSERT INTO students (first_name, last_name, email, password, phone, gender, profile_pic, level) 
+        // VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)
 // PDO QUERY
 // :x means named parameters
 // $sql = 'INSERT INTO files VALUES (DEFAULT, :title, :path, :level);';

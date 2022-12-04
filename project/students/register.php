@@ -1,5 +1,6 @@
 <?php require_once './require.php' ?>
 <?php
+
 // PATHS
 $STUDENTS = get_path('/students/index.php');
 $STUDENTS_REGISTER = get_path('/students/register.php');
@@ -36,10 +37,14 @@ $STUDENTS_FOLDER = get_path('/students');
     return !!$result;
   }
 
-  if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+  echo "<pre>";
+  var_export($_SERVER);
+  echo "</pre>";
+  echo "<pre>";
+  var_export($_SESSION);
+  echo "</pre>";
+  if (isset($_POST['submit'])) {
     $db = new Database;
-
 
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
@@ -128,6 +133,7 @@ $STUDENTS_FOLDER = get_path('/students');
     if (empty($data['level'])) {
       $data['levelError'] = 'Please select a level';
     }
+
     $profileImageName = time() . '-' . $_FILES["profilePic"]["name"];
     // For image upload
     $upload_dir = get_upload_path("/");
@@ -149,7 +155,6 @@ $STUDENTS_FOLDER = get_path('/students');
       // check if errors are empty
       $hasNonEmpty = false;
       foreach ($data as $key => $value) {
-        var_dump($data, $key, $value, preg_match($error_match, $key), $error_match);
         if (!preg_match($error_match, $key)) continue;
         $hasNonEmpty =  !empty($value);
         if ($hasNonEmpty) break; // already have an ans
@@ -317,7 +322,15 @@ scratch. This page gets rid of all links and provides the needed markup only.
                       <select class="custom-select" name="gender" required>
                         <option value="M">Male</option>
                         <option value="F">Female</option>
-                        <option value="Other">Other</option>
+                        <option value="O">Other</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label>Level</label>
+                      <select class="custom-select" name="level" required>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="expert">Expert</option>
                       </select>
                     </div>
 
@@ -325,7 +338,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
                   <!-- /.card-body -->
                   <div class="card-footer">
-                    <button type="submit" class="btn btn-dark">Register</button>
+                    <button type="submit" class="btn btn-dark" name="submit" value="submit">Register</button>
                     <span class="float-right">
                       Already have an account? <a href="login.php">Login</a>
                     </span>

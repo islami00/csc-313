@@ -27,8 +27,5 @@ function get_path(string $part = "")
 
 function get_upload_path(string $part = "")
 {
-  return get_path("/uploads" . $part);
+  return APPROOT . "/uploads" . $part;
 }
-echo "<p> server 1 </p>";
-echo URLROOT . "<br>";
-echo APPROOT . "<br>";
