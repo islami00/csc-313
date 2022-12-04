@@ -184,7 +184,6 @@ $STUDENTS_FOLDER = get_path('/students');
           $_SESSION['gender'] = $data['gender'];
           $_SESSION['phone'] = $data['phone'];
           $_SESSION['dp'] = $target_file;
-
           header("location: ${STUDENTS}");
         } else {
           $files = $_FILES;
@@ -366,7 +365,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </footer>
     </div>
   </body>
-
+  <script>
+    const form_data = "<?php json_encode($data); ?>";
+    const data_as_json = JSON.parse(form_data);
+  </script>
 
   </html>
 <?php else : ?>
