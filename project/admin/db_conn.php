@@ -1,4 +1,5 @@
 <?php
+require '../config.php';
 $host = 'localhost';
 $user = 'root';
 $dbname = 'project_test';
@@ -25,3 +26,6 @@ $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 // } else {
 //   echo "Failure";
 // }
+echo "<p> server 2 </p>";
+echo APPROOT . '<br>';
+echo URLROOT . '<br>';

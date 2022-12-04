@@ -1,5 +1,10 @@
 <?php require_once './require.php' ?>
-
+<?php
+// PATHS
+$STUDENTS = get_path('/students/index.php');
+$STUDENTS_REGISTER = get_path('/students/register.php');
+$STUDENTS_FOLDER = get_path('/students');
+?>
 <?php if (!isLoggedIn()) : ?>
 
   <?php
@@ -13,6 +18,7 @@
     'genderError' => '',
     'profilePicError' => '',
     'phoneError' => '',
+    'levelError' => '',
   ];
 
 
@@ -27,11 +33,7 @@
     $result = $db->single();
 
     // check if email already exists
-    if ($result) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!$result;
   }
 
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -41,8 +43,9 @@
 
     $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
+    $error_match = "/Error/i";
     $passwordValidation = "/^(.{0,7}|[^a-z]*|[^\d]*)$/i";
-
+    $levels = ["beginner", "intermedaite", "advanced"];
     $data = [
       'email' => trim($_POST['email']),
       'password' => trim($_POST['password']),
@@ -51,6 +54,7 @@
       'lastName' => trim($_POST['last_name']),
       'phone' => trim($_POST['phone']),
       'gender' => trim($_POST['gender']),
+      'level' => trim($_POST['level']),
       'profilePic' => $_FILES['profilePic'],
       'emailError' => '',
       'passwordError' => '',
@@ -60,6 +64,7 @@
       'genderError' => '',
       'profilePicError' => '',
       'phoneError' => '',
+      'levelError' => '',
     ];
 
     // validate username
@@ -112,11 +117,6 @@
     if (empty($data['phone'])) {
       $data['phoneError'] = 'Please enter phone number';
     }
-    // else {
-    //   if (!preg_match("/^[0]\d{9}$/",$data['phone'])) {
-    //     $data['phoneError'] = 'Phone number can only contain digits and must start with 0';
-    //   }
-    // }
 
     if (empty($data['gender'])) {
       $data['genderError'] = 'Please enter gender';
@@ -125,10 +125,16 @@
     if (empty($data['profilePic'])) {
       $data['profilePicError'] = 'Please select profile picture';
     }
+    if (empty($data['level'])) {
+      $data['levelError'] = 'Please select a level';
+    }
     $profileImageName = time() . '-' . $_FILES["profilePic"]["name"];
     // For image upload
-    $target_dir = "../media/images/";
-    $target_file = $target_dir . basename($profileImageName);
+    $upload_dir = get_upload_path("/");
+    if (!file_exists($upload_dir)) {
+      mkdir($upload_dir);
+    }
+    $target_file = $upload_dir . basename($profileImageName);
     // VALIDATION
     // validate image size. Size is calculated in Bytes
     if ($_FILES['profilePic']['size'] > 200000) {
@@ -141,11 +147,19 @@
 
     if (move_uploaded_file($_FILES['profilePic']['tmp_name'], $target_file)) {
       // check if errors are empty
-      if (empty($data['emailError']) && empty($data['passwordError']) && empty($data['confirmPasswordError']) && empty($data['firstNameError']) && empty($data['lastNameError']) && empty($data['genderError']) && empty($data['phoneError']) && empty($data['profilePicError'])) {
+      $hasNonEmpty = false;
+      foreach ($data as $key => $value) {
+        var_dump($data, $key, $value, preg_match($error_match, $key), $error_match);
+        if (!preg_match($error_match, $key)) continue;
+        $hasNonEmpty =  !empty($value);
+        if ($hasNonEmpty) break; // already have an ans
+      }
+
+      if (!$hasNonEmpty) {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        $db->query('INSERT INTO students (first_name, last_name, email, password, phone, gender, profile_pic) 
-        VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic)');
+        $db->query('INSERT INTO students (first_name, last_name, email, password, phone, gender, profile_pic, level) 
+        VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)');
 
         // bind value
         $db->bind(':first_name', $data['firstName']);
@@ -155,6 +169,7 @@
         $db->bind(':phone', $data['phone']);
         $db->bind(':gender', $data['gender']);
         $db->bind(':profilePic', $target_file);
+        $db->bind(':level', $data['level']);
 
         if ($db->execute()) {
           $_SESSION['user_id'] = $db->lastInsertId();
@@ -165,16 +180,16 @@
           $_SESSION['phone'] = $data['phone'];
           $_SESSION['dp'] = $target_file;
 
-          header('location: ' . URLROOT . '/students/index.php');
+          header("location: ${STUDENTS}");
         } else {
           $files = $_FILES;
           $error_msg = "Unable to register user. Try again.";
-          header('location: ' . URLROOT . '/students/index.php');
+          header("location: ${STUDENTS}");
         }
       }
     } else {
       $data['profilePicError'] = 'There was an error uploading the profile picture';
-      header('location: ' . URLROOT . '/students/register.php');
+      header("location: ${STUDENTS_REGISTER}");
     }
   }
 
@@ -194,10 +209,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="../plugins/fontawesome-free/css/all.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="../dist/css/adminlte.min.css">
     <style>
       .content {
         margin-top: 50px;
@@ -338,23 +349,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Main Footer -->
       <footer class="main-footer float-left">
         <!-- Default to the left -->
-        <strong>Copyright &copy; 2021 <a href="<?php echo URLROOT . '/students' ?>">CBT Portal</a>.</strong> All rights reserved.
+        <strong>Copyright &copy; 2021 <a href="<?php echo $STUDENTS ?>">CBT Portal</a>.</strong> All rights reserved.
       </footer>
     </div>
-    <!-- ./wrapper -->
-
-    <!-- REQUIRED SCRIPTS -->
-
-    <!-- jQuery -->
-    <script src="../plugins/jquery/jquery.min.js"></script>
-    <!-- Bootstrap 4 -->
-    <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="../dist/js/adminlte.min.js"></script>
   </body>
 
 
   </html>
 <?php else : ?>
-  <?php header('location: ' . URLROOT . '/students'); ?>
+  <?php header("location: ${STUDENTS}"); ?>
 <?php endif; ?>

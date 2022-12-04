@@ -28,14 +28,13 @@
 
         else {
             if ($_SESSION['gender'] == 'M') {
-                return URLROOT . '/dist/img/avatar.png';
+            return get_upload_path("/avatar1.png");
             }
 
             if ($_SESSION['gender'] == 'F') {
-                return URLROOT .'/dist/img/avatar2.png';
+            return get_upload_path("/avatar2.png");
             }
-
-            return URLROOT . '/dist/img/boxed-bg.jpg';
+        return get_upload_path("/boxed-bg.jpg");
         }
 
     }
