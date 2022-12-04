@@ -1,59 +1,53 @@
 <?php
+require_once '../config.php';
+session_start();
 
-// ini_set('session.save_handler', 'memcached');
-// ini_set('session.save_path', getenv('MEMCACHIER_SERVERS'));
-// if(version_compare(phpversion('memcached'), '3', '>=')) {
-//     ini_set('memcached.sess_persistent', 1);
-//     ini_set('memcached.sess_binary_protocol', 1);
-// } else {
-//     ini_set('session.save_path', 'PERSISTENT=myapp_session ' . ini_get('session.save_path'));
-//     ini_set('memcached.sess_binary', 1);
-// }
-// ini_set('memcached.sess_sasl_username', getenv('MEMCACHIER_USERNAME'));
-// ini_set('memcached.sess_sasl_password', getenv('MEMCACHIER_PASSWORD'));
-    session_start();
-    
-    function isLoggedIn() {
-        if (isset($_SESSION['user_id'])) {
-            return true;
-        } else {
-            return false;
-        }
+function isLoggedIn()
+{
+    if (isset($_SESSION['user_id'])) {
+        return true;
+    } else {
+        return false;
     }
+}
 
-    function profilePicture() {
-        if (isset($_SESSION['dp']) && !is_null($_SESSION['dp'])) {
-                return $_SESSION['dp'];
-        }
-
-        else {
-            if ($_SESSION['gender'] == 'M') {
+function do_redirect()
+{
+    $REGISTER = get_path('/students/register.php');
+    if (!isLoggedIn()) {
+        header("location: ${REGISTER}");
+    }
+}
+function profilePicture()
+{
+    if (isset($_SESSION['dp']) && !is_null($_SESSION['dp'])) {
+        return $_SESSION['dp'];
+    } else {
+        if ($_SESSION['gender'] == 'M') {
             return get_upload_path("/avatar1.png");
-            }
-
-            if ($_SESSION['gender'] == 'F') {
-            return get_upload_path("/avatar2.png");
-            }
-        return get_upload_path("/boxed-bg.jpg");
         }
 
+        if ($_SESSION['gender'] == 'F') {
+            return get_upload_path("/avatar2.png");
+        }
+        return get_upload_path("/boxed-bg.jpg");
     }
+}
 
 function isRegistered(int $studentId)
 {
-        $db = new Database;
+    $db = new Database;
     $db->query('SELECT * FROM student WHERE id=:id');
 
     $db->bind(':id', $studentId);
-      
-        $result = $db->single();
-      
-        if ($result) {
-          return true;
-        }
-        else {
-          return false;
-        }
+
+    $result = $db->single();
+
+    if ($result) {
+        return true;
+    } else {
+        return false;
     }
+}
 
 ?>

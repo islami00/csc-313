@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <?php require 'session_helper.php'; ?>
+<?php
+do_redirect();
+?>
 <html lang="en">
 
 <head>
