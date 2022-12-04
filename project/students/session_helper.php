@@ -41,7 +41,7 @@
 
     function isRegistered($student) {
         $db = new Database;
-        $db->query('SELECT * FROM students WHERE id=:id AND registered_courses=1');
+    $db->query('SELECT * FROM student WHERE id=:id AND registered_courses=1');
       
         $db->bind(':id', $student);
       

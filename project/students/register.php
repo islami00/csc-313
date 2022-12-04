@@ -26,7 +26,7 @@ $STUDENTS_FOLDER = get_path('/students');
   {
     $db = new Database;
     // prepared statement
-    $db->query('SELECT * FROM students WHERE email = :email');
+    $db->query('SELECT * FROM student WHERE email = :email');
 
     $db->bind(':email', $email);
 
@@ -158,7 +158,7 @@ $STUDENTS_FOLDER = get_path('/students');
       if (!$hasNonEmpty) {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-        $db->query('INSERT INTO students (first_name, last_name, email, password, phone, gender, profile_pic, level) 
+        $db->query('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
         VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)');
 
         // bind value
