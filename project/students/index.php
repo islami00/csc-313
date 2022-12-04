@@ -1,15 +1,20 @@
-<? require 'session_helper.php'; ?>
+<!DOCTYPE html>
+<?php require 'session_helper.php'; ?>
+<html lang="en">
 
-<?php
-session_start();
-echo "<pre>";
-var_export($_SESSION);
-"</pre>";
-"<pre>";
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
 
-var_export($_SERVER);
-"</pre>";
+<body>
 
-echo session_status();
-session_reset();
-session_destroy();
+</body>
+<script>
+  const session = '<?php echo json_encode($_SESSION); ?>';
+  const session_obj = JSON.parse(session); // use session
+</script>
+
+</html>

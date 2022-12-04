@@ -162,6 +162,39 @@
 </body>
 
 <script>
+  // You're given form_data in format:
+  /*
+  dataFormat {
+    email:                string;
+    password:             string;
+    confirmPassword:      string;
+    firstName:            string;
+    lastName:             string;
+    phone:                string;
+    gender:               string;
+    level:                string;
+    profilePic:           ProfilePic; // this is an object with same shape as ProfilePic,
+    emailError:           string;
+    passwordError:        string;
+    confirmPasswordError: string;
+    firstNameError:       string;
+    lastNameError:        string;
+    genderError:          string;
+    profilePicError:      string;
+    phoneError:           string;
+    levelError:           string;
+    errorCode:            number; // 0 =  "validation error, use respective  *Error fields to show an error", // 1 = "Registration error", we couldn't register the user on db. 2  = "Upload error" , the selected file couldn't be uploaded to the server.
+}
+
+  ProfilePic {
+    name:      string;
+    full_path: string;
+    type:      string;
+    tmp_name:  string;
+    error:     number;
+    size:      number;
+}
+    */
   const form_data = JSON.parse('<?php echo json_encode($data); ?>');
   console.log(form_data);
 </script>
