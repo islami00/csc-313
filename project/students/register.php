@@ -11,6 +11,15 @@ $STUDENTS_FOLDER = get_path('/students');
   <?php
 
   $data = [
+    'email' => '',
+    'password' => '',
+    'confirmPassword' => '',
+    'firstName' => '',
+    'lastName' => '',
+    'phone' => '',
+    'gender' => '',
+    'level' => '',
+    'profilePic' => '',
     'emailError' => '',
     'passwordError' => '',
     'confirmPasswordError' => '',
@@ -20,9 +29,8 @@ $STUDENTS_FOLDER = get_path('/students');
     'profilePicError' => '',
     'phoneError' => '',
     'levelError' => '',
+    'errorCode' => -1,
   ];
-
-
   function findStudentByEmail($email)
   {
     $db = new Database;
@@ -37,22 +45,11 @@ $STUDENTS_FOLDER = get_path('/students');
     return !!$result;
   }
 
-  echo "<pre>";
-  var_export($_SERVER);
-  echo "</pre>";
-  echo "<pre>";
-  var_export($_SESSION);
-  echo "</pre>";
   if (isset($_POST['submit'])) {
     $db = new Database;
-
-    $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
-
-    $error_match = "/Error/i";
-    $passwordValidation = "/^(.{0,7}|[^a-z]*|[^\d]*)$/i";
-    $levels = ["beginner", "intermedaite", "advanced"];
+    global $data;
     $data = [
-      'email' => trim($_POST['email']),
+      ...$data,     'email' => trim($_POST['email']),
       'password' => trim($_POST['password']),
       'confirmPassword' => trim($_POST['confirm_password']),
       'firstName' => trim($_POST['first_name']),
@@ -60,79 +57,101 @@ $STUDENTS_FOLDER = get_path('/students');
       'phone' => trim($_POST['phone']),
       'gender' => trim($_POST['gender']),
       'level' => trim($_POST['level']),
-      'profilePic' => $_FILES['profilePic'],
-      'emailError' => '',
-      'passwordError' => '',
-      'confirmPasswordError' => '',
-      'firstNameError' => '',
-      'lastNameError' => '',
-      'genderError' => '',
-      'profilePicError' => '',
-      'phoneError' => '',
-      'levelError' => '',
+      'profilePic' => $_FILES['profilePic']
     ];
+    // 1: Don't mutate globals. (unless it's fine.)
+    // $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
 
-    // validate username
-    if (empty($data['email'])) {
-      $data['emailError'] = 'Please enter an email address';
-    } else {
-      if (findStudentByEmail($data['email'])) {
-        $data['emailError'] = 'An account with this email address already exists';
-      }
+    $error_match = "/Error/i";
+    $passwordValidation = "/^(.{0,7}|[^a-z]*|[^\d]*)$/i";
+    $levels = ["beginner", "intermedaite", "advanced"];
 
-      if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-        $data['emailError'] = "Invalid email format";
-      }
-    }
-
-    // validate password
-    if (empty($data['password'])) {
-      $data['passwordError'] = 'Please enter a password';
-    } else {
-      if ($data['password'] == $data['confirmPassword']) {
-        $password = $data["password"];
-        $cpassword = $data["confirmPassword"];
-        if (strlen($password) <= '8') {
-          $data['passwordError'] = "Your Password Must Contain At Least 8 Characters!";
-        } elseif (preg_match($passwordValidation, $data['password'])) {
-          $data['passwordError'] = 'Password must be have at least one numeric value.';
-        }
+    try {
+      // validate username
+      if (empty($data['email'])) {
+        $data['emailError'] = 'Please enter an email address';
       } else {
-        $data['passwordError'] = "Passwords don't match";
-        $data['confirmPasswordError'] = "Passwords don't match";
+        if (findStudentByEmail($data['email'])) {
+          $data['emailError'] = 'An account with this email address already exists';
+        }
+
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+          $data['emailError'] = "Invalid email format";
+        }
       }
-    }
 
-    if (empty($data['firstName'])) {
-      $data['firstNameError'] = 'Please enter first name';
-    } else {
-      if (!preg_match("/^[a-zA-Z-' ]*$/", $data['firstName'])) {
-        $data['firstNameError'] = "Only letters and white space allowed";
+      // validate password
+      if (empty($data['password'])) {
+        $data['passwordError'] = 'Please enter a password';
+      } else {
+        if ($data['password'] == $data['confirmPassword']) {
+          $password = $data["password"];
+          $cpassword = $data["confirmPassword"];
+          if (
+            strlen($password) <= '8'
+          ) {
+            $data['passwordError'] = "Your Password Must Contain At Least 8 Characters!";
+          } elseif (preg_match($passwordValidation, $data['password'])) {
+            $data['passwordError'] = 'Password must be have at least one numeric value.';
+          }
+        } else {
+          $data['passwordError'] = "Passwords don't match";
+          $data['confirmPasswordError'] = "Passwords don't match";
+        }
       }
-    }
 
-    if (empty($data['lastName'])) {
-      $data['lastNameError'] = 'Please enter last name';
-    } else {
-      if (!preg_match("/^[a-zA-Z-' ]*$/", $data['lastName'])) {
-        $data['lastNameError'] = "Only letters and white space allowed";
+      if (empty($data['firstName'])) {
+        $data['firstNameError'] = 'Please enter first name';
+      } else {
+        if (!preg_match("/^[a-zA-Z-' ]*$/", $data['firstName'])) {
+          $data['firstNameError'] = "Only letters and white space allowed";
+        }
       }
+
+      if (empty($data['lastName'])) {
+        $data['lastNameError'] = 'Please enter last name';
+      } else {
+        if (!preg_match("/^[a-zA-Z-' ]*$/", $data['lastName'])) {
+          $data['lastNameError'] = "Only letters and white space allowed";
+        }
+      }
+
+      if (empty($data['phone'])) {
+        $data['phoneError'] = 'Please enter phone number';
+      }
+
+      if (empty($data['gender'])) {
+        $data['genderError'] = 'Please enter gender';
+      }
+      // Photo must have a name
+      if (empty($data['profilePic']['name'])) {
+        $data['profilePicError'] = 'Please select profile picture';
+      }
+      if (empty($data['level'])) {
+        $data['levelError'] = 'Please select a level';
+      }
+      // VALIDATION
+      // validate image size. Size is calculated in Bytes
+      if ($_FILES['profilePic']['size'] > 200000) {
+        $data['profilePicError'] = "Image size should not be greated than 200Kb";
+      }
+      // 2: No need.  timestamp will make files unique. Plus, users shouldn't be limited by filename.
+      // // check if file exists
+      // if (file_exists($target_file)) {
+      //   $data['profilePicError'] = "File already exists";
+      // }
+      $hasNonEmpty = false;
+      foreach ($data as $key => $value) {
+        if (!preg_match($error_match, $key) || $key === 'errorCode') continue;
+        $hasNonEmpty =  !empty($value);
+        if ($hasNonEmpty) throw new Error(); // already have an ans
+      }
+    } catch (\Throwable $th) {
+      //validation error
+      $data['errorCode'] = 0;
     }
 
-    if (empty($data['phone'])) {
-      $data['phoneError'] = 'Please enter phone number';
-    }
 
-    if (empty($data['gender'])) {
-      $data['genderError'] = 'Please enter gender';
-    }
-
-    if (empty($data['profilePic'])) {
-      $data['profilePicError'] = 'Please select profile picture';
-    }
-    if (empty($data['level'])) {
-      $data['levelError'] = 'Please select a level';
-    }
 
     $profileImageName = time() . '-' . $_FILES["profilePic"]["name"];
     // For image upload
@@ -141,236 +160,47 @@ $STUDENTS_FOLDER = get_path('/students');
       mkdir($upload_dir);
     }
     $target_file = $upload_dir . basename($profileImageName);
-    // VALIDATION
-    // validate image size. Size is calculated in Bytes
-    if ($_FILES['profilePic']['size'] > 200000) {
-      $data['profilePicError'] = "Image size should not be greated than 200Kb";
+    $moved = false;
+    if ($data['errorCode'] !== 0) {
+      $moved  = move_uploaded_file($_FILES['profilePic']['tmp_name'], $target_file);
     }
-    // check if file exists
-    if (file_exists($target_file)) {
-      $data['profilePicError'] = "File already exists";
-    }
+    if ($moved) {
+      $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    if (move_uploaded_file($_FILES['profilePic']['tmp_name'], $target_file)) {
-      // check if errors are empty
-      $hasNonEmpty = false;
-      foreach ($data as $key => $value) {
-        if (!preg_match($error_match, $key)) continue;
-        $hasNonEmpty =  !empty($value);
-        if ($hasNonEmpty) break; // already have an ans
-      }
-
-      if (!$hasNonEmpty) {
-        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-
-        $db->query('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
+      $db->query('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
         VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)');
 
-        // bind value
-        $db->bind(':first_name', $data['firstName']);
-        $db->bind(':last_name', $data['lastName']);
-        $db->bind(':email', $data['email']);
-        $db->bind(':password', $data['password']);
-        $db->bind(':phone', $data['phone']);
-        $db->bind(':gender', $data['gender']);
-        $db->bind(':profilePic', $target_file);
-        $db->bind(':level', $data['level']);
+      // bind value
+      $db->bind(':first_name', $data['firstName']);
+      $db->bind(':last_name', $data['lastName']);
+      $db->bind(':email', $data['email']);
+      $db->bind(':password', $data['password']);
+      $db->bind(':phone', $data['phone']);
+      $db->bind(':gender', $data['gender']);
+      $db->bind(':profilePic', $target_file);
+      $db->bind(':level', $data['level']);
 
-        if ($db->execute()) {
-          $_SESSION['user_id'] = $db->lastInsertId();
-          $_SESSION['first_name'] = $data['firstName'];
-          $_SESSION['last_name'] = $data['lastName'];
-          $_SESSION['email'] = $data['email'];
-          $_SESSION['gender'] = $data['gender'];
-          $_SESSION['phone'] = $data['phone'];
-          $_SESSION['dp'] = $target_file;
-          header("location: ${STUDENTS}");
-        } else {
-          $files = $_FILES;
-          $error_msg = "Unable to register user. Try again.";
-          header("location: ${STUDENTS}");
-        }
+      if ($db->execute()) {
+        $_SESSION['user_id'] = $db->lastInsertId();
+        $_SESSION['first_name'] = $data['firstName'];
+        $_SESSION['last_name'] = $data['lastName'];
+        $_SESSION['email'] = $data['email'];
+        $_SESSION['gender'] = $data['gender'];
+        $_SESSION['phone'] = $data['phone'];
+        $_SESSION['dp'] = $target_file;
+        header("location: ${STUDENTS}");
+      } else {
+        $data['errorCode'] = 1; // execute error
       }
-    } else {
-      $data['profilePicError'] = 'There was an error uploading the profile picture';
-      header("location: ${STUDENTS_REGISTER}");
+    } else if ($data['errorCode'] !== 0) {
+      $data['errorCode'] = 2; // upload error
     }
   }
 
   ?>
 
-  <!DOCTYPE html>
-  <!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
-  <html lang="en">
 
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CBT Portal | Register</title>
-
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <style>
-      .content {
-        margin-top: 50px;
-      }
-
-      #profileDisplay {
-        display: block;
-        height: 210px;
-        width: 30%;
-        margin: 0px auto;
-        border-radius: 50%;
-      }
-
-      .img-placeholder {
-        width: 30%;
-        color: white;
-        height: 100%;
-        background: black;
-        opacity: .7;
-        height: 210px;
-        border-radius: 50%;
-        z-index: 2;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        display: none;
-      }
-
-      .img-placeholder h4 {
-        margin-top: 40%;
-        color: white;
-      }
-
-      .img-div:hover .img-placeholder {
-        display: block;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-
-  <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
-
-
-      <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="offset-md-2"></div>
-            <div class="col-sm-6">
-              <h1>CBT Portal</h1>
-              <?php if (isset($error_msg)) : ?>
-                <p class="text-danger"><?php echo $error_msg ?></p>
-              <?php endif; ?>
-            </div>
-          </div>
-        </div><!-- /.container-fluid -->
-      </section>
-
-      <!-- Main content -->
-      <section class="content">
-        <div class="container-fluid">
-          <div class="row">
-            <!-- left column -->
-            <div class="offset-md-2"></div>
-            <div class="col-md-8">
-              <!-- jquery validation -->
-              <div class="card card-dark">
-                <div class="card-header">
-                  <h3 class="card-title">Register</h3>
-                </div>
-                <!-- /.card-header -->
-                <!-- form start -->
-                <form id="quickForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
-                  <div class="card-body">
-                    <div class="form-group">
-                      <label>Profile Picture</label>
-                      <input type="file" name="profilePic" id="profileImage" class="form-control" value="">
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">First name</label>
-                      <input type="text" name="first_name" class="form-control" id="exampleInputEmail1" placeholder="Enter first name" required><span class="text-red">*<?php echo $data['firstNameError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Last name</label>
-                      <input type="text" name="last_name" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red">*<?php echo $data['lastNameError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Email address</label>
-                      <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red">*<?php echo $data['emailError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Password</label>
-                      <input type="password" name="password" class="form-control" id="exampleInputEmail1" placeholder="Enter Password" required><span class="text-red">*<?php echo $data['passwordError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Confirm Password</label>
-                      <input type="password" name="confirm_password" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red">*<?php echo $data['confirmPasswordError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Phone Number</label>
-                      <input type="tel" name="phone" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number" required><span class="text-red">*<?php echo $data['phoneError']; ?></span>
-                    </div>
-                    <div class="form-group">
-                      <label>Gender</label>
-                      <select class="custom-select" name="gender" required>
-                        <option value="M">Male</option>
-                        <option value="F">Female</option>
-                        <option value="O">Other</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label>Level</label>
-                      <select class="custom-select" name="level" required>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="expert">Expert</option>
-                      </select>
-                    </div>
-
-                  </div>
-
-                  <!-- /.card-body -->
-                  <div class="card-footer">
-                    <button type="submit" class="btn btn-dark" name="submit" value="submit">Register</button>
-                    <span class="float-right">
-                      Already have an account? <a href="login.php">Login</a>
-                    </span>
-                  </div>
-                </form>
-              </div>
-              <!-- /.card -->
-            </div>
-            <!--/.col (left) -->
-            <!-- right column -->
-            <div class="col-md-6">
-
-            </div>
-            <!--/.col (right) -->
-          </div>
-          <!-- /.row -->
-        </div><!-- /.container-fluid -->
-      </section><br>
-      <!-- /.content -->
-
-      <!-- Main Footer -->
-      <footer class="main-footer float-left">
-        <!-- Default to the left -->
-        <strong>Copyright &copy; 2021 <a href="<?php echo $STUDENTS ?>">CBT Portal</a>.</strong> All rights reserved.
-      </footer>
-    </div>
-  </body>
-  <script>
-    const form_data = "<?php json_encode($data); ?>";
-    const data_as_json = JSON.parse(form_data);
-  </script>
-
-  </html>
+<?php require 'signup-page.php' ?>
 <?php else : ?>
   <?php header("location: ${STUDENTS}"); ?>
 <?php endif; ?>
