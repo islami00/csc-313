@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+require './config.php';
+$ADMIN_LOGIN = get_path("/admin/login.php");
+$STUDENT_LOGIN = get_path("/students/login.php"); ?>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Landing Page</title>
     <style>
         body {
             /* Remove margin on body so container does not cause scrolling */
@@ -60,8 +65,8 @@
 <body>
 
     <main class="link_container">
-        <a href="landpage.html" class="link_box">Student Signup / login </a>
-        <a href="loginPage.html" class="link_box">Admin login </a>
+        <a href="<?php echo $STUDENT_LOGIN ?>" class="link_box">Student Signup / login </a>
+        <a href="<?php echo $ADMIN_LOGIN ?>" class="link_box">Admin login </a>
     </main>
 
 </body>
