@@ -4,11 +4,9 @@ session_start();
 
 function isLoggedIn()
 {
-    if (isset($_SESSION['user_id'])) {
-        return true;
-    } else {
-        return false;
-    }
+    // https: //www.cloudways.com/blog/php-session-security/
+    $sessionId =  $_COOKIE['session'];
+    return !empty($_SESSION[$sessionId]);
 }
 
 function maybe_redirect()
