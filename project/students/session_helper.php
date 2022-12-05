@@ -11,7 +11,7 @@ function isLoggedIn()
     }
 }
 
-function do_redirect()
+function maybe_redirect()
 {
     $REGISTER = get_path('/students/register.php');
     if (!isLoggedIn()) {
@@ -37,10 +37,10 @@ function profilePicture()
 function isRegistered(int $studentId)
 {
     $db = new Database;
-    $db->query('SELECT * FROM student WHERE id=:id');
+    $db->prepare('SELECT * FROM student WHERE id=:id');
 
     $db->bind(':id', $studentId);
-
+    $db->execute();
     $result = $db->single();
 
     if ($result) {

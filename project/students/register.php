@@ -39,10 +39,10 @@ function findStudentByEmail($email)
 {
   $db = new Database;
   // prepared statement
-  $db->query('SELECT * FROM student WHERE email = :email');
+  $db->prepare('SELECT * FROM student WHERE email = :email');
 
   $db->bind(':email', $email);
-
+  $db->execute();
   $result = $db->single();
 
   // check if email already exists
@@ -173,7 +173,7 @@ if (isset($_POST['submit'])) {
   if ($moved) {
     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    $db->query('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
+    $db->prepare('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
         VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)');
 
     // bind value
