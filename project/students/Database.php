@@ -90,5 +90,15 @@ class Database {
         return $this->statement;
     }
 }
+class User
+{
+    public int $id;
+    public string $firstname;
+    public string  $username;
+    public string $password;
+    public string $lastname;
+    public string $role;
+    public string $level;
+}
 
 ?>

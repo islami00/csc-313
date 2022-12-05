@@ -1,5 +1,6 @@
 <?php
 require_once '../config.php';
+require_once 'Database.php';
 session_start();
 
 function isLoggedIn()
@@ -47,5 +48,27 @@ function isRegistered(int $studentId)
         return false;
     }
 }
+
+function guidv4()
+{
+    return random_bytes(16);
+}
+/**
+ * @return User|false
+ */
+function get_current_appuser()
+{
+    $sessionId = $_COOKIE['session'];
+    $userId =  $_SESSION[$sessionId];
+
+    $db =  new Database;
+    $sql_user =  "SELECT * FROM `users` where `user`.id = ':userId' LIMIT 1";
+    $stmt_user = $db->prepare($sql_user);
+    $db->bind(":userId", $userId);
+    if (!$db->execute()) return false;
+    $user = $stmt_user->fetch();
+    return $user;
+}
+
 
 ?>

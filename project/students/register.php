@@ -187,13 +187,9 @@ if (isset($_POST['submit'])) {
     $db->bind(':level', $data['level']);
 
     if ($db->execute()) {
-      $_SESSION['user_id'] = $db->lastInsertId();
-      $_SESSION['first_name'] = $data['firstName'];
-      $_SESSION['last_name'] = $data['lastName'];
-      $_SESSION['email'] = $data['email'];
-      $_SESSION['gender'] = $data['gender'];
-      $_SESSION['phone'] = $data['phone'];
-      $_SESSION['dp'] = $target_file;
+      $sessionId =  guidv4();
+      $_COOKIE['session'] =  $sessionId;
+      $_SESSION[$sessionId] = $db->lastInsertId();
       header("location: ${STUDENTS}");
     } else {
       $data['errorCode'] = 1; // execute error
