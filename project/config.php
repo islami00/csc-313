@@ -24,6 +24,9 @@ function get_path(string $part = "")
 {
   return URLROOT . $part;
 }
+/**
+ * Gets FS path to uploaded file for moving. NB: Uploads should be saved by name for easy reference.
+ */
 
 function get_upload_path(string $part = "")
 {
