@@ -9,11 +9,11 @@ session_start();
 include("connection.php");
 
 $STUDENT_INDEX = get_path('/students/index.php');
-
+$REGISTER =  get_path("/students/register.php");
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
-  //SOMETHING WAS POSTED 
+  //SOMETHING WAS POSTED
   $user = $_POST['user'];
   $Password = $_POST['Password'];
 
@@ -24,20 +24,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 
-    $query = "select * from users where username = :user limit 1";
-    $result = mysqli_query($con, $query);
-
-    if ($result) {
-      if ($result && mysqli_num_rows($result) > 0) {
-        $user_data = mysqli_fetch_assoc($result);
-        if (validate_password($Password, $user_data['Password'])) {
-          login($user_data['id']);
-          header("Location: ${STUDENT_INDEX}");
-          die;
-        }
+    $db = new Database;
+    $stmt = $db->prepare($GET_ONE_STUDENT_QUERY);
+    $db->bind(":userId", $user);
+    $result = $db->execute();
+    $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result && $user_data) {
+      // hash password.
+      if (validate_password($Password, $user_data['Password'])) {
+        login($user_data['id']);
+        header("Location: ${STUDENT_INDEX}");
+        die;
       }
+    } else if ($stmt->rowCount() === 0) {
+      echo "User does not exist";
+    } else {
+      echo "incorrect username or password";
     }
-    echo "incorrect username or password";
   } else {
     echo "Please enter valid information.";
   }
@@ -63,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       <p>Password</p>
       <input type="Password" name="Password" placeholder="Password">
       <button type="submit">Login</button>
-      Don't have an account?<a href="#">Register</a>
+      Don't have an account?<a href="<?php echo $REGISTER; ?>">Register</a>
     </form>
   </div>
 
