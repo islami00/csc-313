@@ -84,6 +84,30 @@ function get_current_appuser()
     return $user;
 }
 
-
-
+/**
+ * Log the user in by creating a session and setting a cookie.
+ */
+function login(string $userId)
+{
+    global $SESSION_COOKIE_KEY, $DAY;
+    $sessionId =  guidv4();
+    setcookie(
+        $SESSION_COOKIE_KEY,
+        $sessionId,
+        time() + 1 * $DAY,
+        '/'
+    );
+    $_SESSION[$sessionId] = $userId;
+}
+/**
+ * Check if the password matches db.
+ * 
+ * @param string $psw -- Password as entered by user
+ * @param string $dbpsw -- Password entry fetched from db.
+ */
+function validate_password(string $psw, string $dbpsw)
+{
+    $hashedInput = password_hash($psw, PASSWORD_DEFAULT);
+    return $hashedInput === $dbpsw;
+}
 ?>

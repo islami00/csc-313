@@ -208,16 +208,7 @@ if (isset($_POST['submit'])) {
     $db->bind(':username', $data['username']);
 
     if ($db->execute()) {
-      // do login
-      $sessionId =  guidv4();
-      setcookie(
-        $SESSION_COOKIE_KEY,
-        $sessionId,
-        time() + 7 * $DAY,
-        '/'
-      );
-
-      $_SESSION[$sessionId] = $db->lastInsertId();
+      login($db->lastInsertId());
       header("location: ${STUDENTS}");
     } else {
       $data['errorCode'] = 1; // execute error
