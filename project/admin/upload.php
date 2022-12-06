@@ -1,8 +1,9 @@
 <?php
 
-require __DIR__ .  '/db_conn.php';
+require_once __DIR__ .  '/db_conn.php';
+require_once __DIR__ .  '/../students/session_helper.php';
 
-require __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
@@ -14,34 +15,44 @@ $rules = [
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
 
-function add_to_db($file_name, $target_path, $level)
+function add_to_db($title, $file_name, $level, $admin_id)
 {
-  global $connection;
   // PRDO QUERY
-  $sql = 'INSERT INTO files VALUES (DEFAULT, :title, :path, :level);';
+  $connection =  new Database;
+  $sql = 'INSERT INTO topics (`title`,`uploaded_file_name`,`level`,`admin_id`) VALUES (:title, :file_name, :level,:admin_id);';
   $stmt = $connection->prepare($sql);
   $result = false;
   if ($stmt) {
-    $result = $stmt->execute([':title' => $file_name, ':path' => $target_path, ':level' => $level]);
+    $result = $stmt->execute(
+      [
+        ':title' => $title,
+        ':file_name' => $file_name,
+        ':level' => $level,
+        ':admin_id' => $admin_id,
+      ]
+    );
   }
   return $result;
 }
 
-function do_upload()
+function do_upload(User $admin)
 {
   $file_name = $_FILES['upload']['name'];
   $file_tmp = $_FILES['upload']['tmp_name'];
-  $upload_dir = 'uploads';
-  $target_path = "${upload_dir}/${file_name}";
+  $title = $_POST['title'];
+  $level = $_POST['level'];
+  $upload_dir = get_upload_path("/");
+  $target_path = get_upload_path("/${file_name}");
+  // get user.
   if (!file_exists($upload_dir)) {
     mkdir($upload_dir);
   }
   move_uploaded_file($file_tmp, $target_path);
-  return add_to_db($file_name, $target_path, 'beginner');
+  return add_to_db($title, $file_name, $level, $admin->id);
 }
 
 $message = null;
-function do_validate()
+function do_validate(User $admin_user)
 {
 
   global $validation, $message;
@@ -54,15 +65,19 @@ function do_validate()
     $message = '<p>Error on file validation</p>';
     return;
   }
-
-  $success = do_upload();
+  if (!$admin_user) {
+    $message = '<p>You are either not logged in or unauthorized</p>';
+    return;
+  }
+  $success = do_upload($admin_user);
   if ($success) {
     $message = '<p>File uploaded successfully!</p>';
   } else {
     $message = '<p>Error on file upload</p>';
   }
 }
-do_validate();
+$user=maybe_redirect_admin();
+do_validate($user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,6 +87,10 @@ do_validate();
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    @import "https://unpkg.com/open-props";
+    @import "https://unpkg.com/open-props/normalize.min.css";
+    @import "https://unpkg.com/open-props/buttons.min.css";
+
     form {
       color: rgb(4, 5, 65);
     }
@@ -112,13 +131,17 @@ do_validate();
         <label for="title">Name of topic</label><br>
         <input type="text" name="title"><br><br>
       </div>
-      <div>
-        <label for="title">Target level</label><br>
-        <input type="text" name="level"><br><br>
+      <div class="form-group">
+        <label for="level">Target level</label>
+        <select class="form-control" name="level" required>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="expert">Expert</option>
+        </select>
       </div>
       <div>
         <label for="title">Topic file</label><br>
-        <input maxlength="2000" type="file" name="upload" id="">
+        <input maxlength="2000" type="file" name="upload" required>
       </div>
       <button type="submit" name="submit" value="submit">Submit</button>
     </form>

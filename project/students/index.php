@@ -7,7 +7,7 @@ maybe_redirect();
 
 // Get current user obj from session.
 
-$user = get_current_appuser();
+$user = get_current_student();
 function get_topics()
 {
   global $user;

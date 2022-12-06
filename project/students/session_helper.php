@@ -24,6 +24,16 @@ function maybe_redirect()
         header("location: ${REGISTER}");
     }
 }
+function maybe_redirect_admin()
+{
+    $REGISTER = get_path('/students/register.php');
+    $admin_user = get_current_admin();
+    if (!$admin_user) {
+        header("location: ${REGISTER}");
+        die;
+    }
+    return $admin_user;
+}
 function profilePicture()
 {
     if (isset($_SESSION['dp']) && !is_null($_SESSION['dp'])) {
@@ -62,17 +72,21 @@ function guidv4()
     return random_bytes(16);
 }
 /**
+ * @param string $sql_user -- SQL of form : 
+ * ```SQL
+ * SELECT * FROM `users` where `users`.`id` = :userId LIMIT 1;
+ * ```
+ * Tries to get The :userId param from session.
  * @return User|false
  */
-function get_current_appuser()
+function get_current_appuser(string $sql_user)
 {
     global $SESSION_COOKIE_KEY;
     if (!isLoggedIn()) throw new Error("Unauthorized", 401);
     $sessionId = $_COOKIE[$SESSION_COOKIE_KEY];
     $userId =  $_SESSION[$sessionId];
-    echo $userId;
     $db =  new Database;
-    $sql_user =  "SELECT * FROM `users` where `users`.`id` = :userId LIMIT 1";
+    
     $stmt_user = $db->prepare($sql_user);
     if (!$db->bind(":userId", +$userId)) {
         return false;
@@ -83,7 +97,14 @@ function get_current_appuser()
     $user = $stmt_user->fetch();
     return $user;
 }
-
+function get_current_student()
+{
+    return get_current_appuser("SELECT * FROM `users` where `users`.`id` = :userId LIMIT 1");
+}
+function get_current_admin()
+{
+    return get_current_appuser("SELECT * FROM `users` where `users`.`id` = :userId AND `users`.`role` = 'admin' LIMIT 1");
+}
 /**
  * Log the user in by creating a session and setting a cookie.
  */
