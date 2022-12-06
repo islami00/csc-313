@@ -3,8 +3,8 @@
 session_start();
 
 include("connection.php");
-include("functions.php");
 
+$STUDENT_INDEX = get_path('/students/index.php');
 
   if($_SERVER['REQUEST_METHOD'] == "POST"){
 
@@ -16,23 +16,21 @@ include("functions.php");
     if(!empty($user) && !empty($Password)&& !is_numeric($user)){
 
 
-      // read from db
+    // read from db
 
 
-      
-      $query = "select * from users where user_name = '$user' limit 1";
+
+    $query = "select * from users where username = :user limit 1";
       $result = mysqli_query($con,$query);
 
       if($result){
-      	if($result && mysqli_num_rows($result)>0)
-			{
-				$user_data=mysqli_fetch_assoc($result);
-				if($user_data['Password']===$Password){
-
-					$_SESSION['user_id']=$user_data['user_id'];
-					header("Location: index.php");
-      				die;
-				}
+      if ($result && mysqli_num_rows($result) > 0) {
+        $user_data = mysqli_fetch_assoc($result);
+        if (validate_password($Password, $user_data['Password'])) {
+          login($user_data['id']);
+          header("Location: ${STUDENT_INDEX}");
+          die;
+        }
 			}
       }
       echo "incorrect username or password";

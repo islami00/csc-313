@@ -3,9 +3,14 @@
 session_start();
 
 include("connection.php");
-include("functions.php");
+/**
+ * Actionable:
+ * 1. Use username column, and admin role.
+ * Improvements:
+ * 1. Use db.
+ */
 
-
+$ADMIN_INDEX = get_path('/admin/index.php');
   if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 
@@ -13,25 +18,25 @@ include("functions.php");
     $user= $_POST['user'];
     $Password=$_POST['Password'];
 
-    if(!empty($user) && !empty($Password)&& !is_numeric($user)){
+  if (!empty($user) && !empty($Password)) {
 
 
-      // read from db
+    // read from db
 
 
-      
-      $query = "select * from users where user_name = '$user' limit 1";
+    // need to set user.
+    $query = "select * from users where username = :user limit 1";
       $result = mysqli_query($con,$query);
 
       if($result){
-        if($result && mysqli_num_rows($result)>0)
-      {
-        $user_data=mysqli_fetch_assoc($result);
-        if($user_data['Password']===$Password){
+      if ($result && mysqli_num_rows($result) > 0) {
+        $user_data = mysqli_fetch_assoc($result);
 
-          $_SESSION['user_id']=$user_data['user_id'];
-          header("Location: index.php");
-              die;
+        // hash password.
+        if (validate_password($Password, $user_data['Password'])) {
+          login($user_data['id']);
+          header("Location: ${ADMIN_INDEX}");
+          die;
         }
       }
       }
