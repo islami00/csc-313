@@ -20,7 +20,7 @@ $data = [
   'confirmPassword' => '',
   'firstName' => '',
   'lastName' => '',
-  'phone' => '',
+  'phone' => 0,
   'gender' => '',
   'profilePic' => '',
   'level' => '',
@@ -42,7 +42,7 @@ function findStudentByEmail($email)
 {
   $db = new Database;
   // prepared statement
-  $db->prepare('SELECT * FROM student WHERE email = :email');
+  $db->prepare('SELECT * FROM users WHERE email = :email');
 
   $db->bind(':email', $email);
   $db->execute();
@@ -53,19 +53,21 @@ function findStudentByEmail($email)
 }
 
 if (isset($_POST['submit'])) {
+
   $db = new Database;
   global $data;
   $data = [
-    ...$data,     'email' => trim($_POST['email']),
+    ...$data,     
+    'email' => trim($_POST['email']),
     'password' => trim($_POST['password']),
     'confirmPassword' => trim($_POST['confirm_password']),
     'firstName' => trim($_POST['first_name']),
     'lastName' => trim($_POST['last_name']),
-    'phone' => trim($_POST['phone']),
-    'gender' => trim($_POST['gender']),
+    'phone' => trim(maybe_get($_POST,'phone')),
+    'gender' => trim(maybe_get($_POST, 'gender')), 
     'level' => trim($_POST['level']),
     'username' => trim($_POST['username']),
-    'profilePic' => $_FILES['profilePic']
+    'profilePic' => maybe_get($_FILES, 'profilePic')
   ];
   // 1: Don't mutate globals. (unless it's fine.)
   // $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
@@ -126,17 +128,17 @@ if (isset($_POST['submit'])) {
       }
     }
 
-    if (empty($data['phone'])) {
-      $data['phoneError'] = 'Please enter phone number';
-    }
+    // if (empty($data['phone'])) {
+    //   $data['phoneError'] = 'Please enter phone number';
+    // }
 
-    if (empty($data['gender'])) {
-      $data['genderError'] = 'Please enter gender';
-    }
-    // Photo must have a name
-    if (empty($data['profilePic']['name'])) {
-      $data['profilePicError'] = 'Please select profile picture';
-    }
+    // if (empty($data['gender'])) {
+    //   $data['genderError'] = 'Please enter gender';
+    // }
+    // // Photo must have a name
+    // if (empty($data['profilePic']['name'])) {
+    //   $data['profilePicError'] = 'Please select profile picture';
+    // }
     if (empty($data['level'])) {
       $data['levelError'] = 'Please select a level';
     }
