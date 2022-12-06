@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<?php require '../config.php' ?>
+<?php require __DIR__ . '/../config.php' ?>
 <?php $LOGIN_CSS =  get_path("/public/admin-login.css") ?>
 
 <head>

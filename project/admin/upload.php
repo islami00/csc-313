@@ -1,13 +1,15 @@
 <?php
 
-include './db_conn.php';
+require __DIR__ .  '/db_conn.php';
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
 $validator = new Validator();
 $rules = [
   'upload' => ['required', 'mimes:png,jpeg,pdf', "max:2M"],
+  "level" => ['required'],
   'submit' => 'required',
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
@@ -31,7 +33,6 @@ function do_upload()
   $file_tmp = $_FILES['upload']['tmp_name'];
   $upload_dir = 'uploads';
   $target_path = "${upload_dir}/${file_name}";
-  echo $target_path;
   if (!file_exists($upload_dir)) {
     mkdir($upload_dir);
   }
@@ -70,6 +71,32 @@ do_validate();
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    form {
+      color: rgb(4, 5, 65);
+    }
+
+    h1 {
+      color: #09243b;
+    }
+
+    body {
+      background-color: lightslategrey;
+    }
+
+
+    #rcorners1 {
+
+
+      background: lavender;
+      border-style: groove;
+      width: 180px;
+      margin: 0px auto;
+      height: auto;
+      padding: 60px;
+      border: 2px solid #09243b;
+    }
+  </style>
   <title>Upload</title>
 </head>
 
@@ -77,10 +104,23 @@ do_validate();
   <?php if ($message !== null) : ?>
     <p><?php echo $message; ?></p>
   <?php endif ?>
-  <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-    <input maxlength="" type="file" name="upload" id="">
-    <input type="submit" name="submit" value="submit">
-  </form>
-</body>
 
-</html>
+  <div id="rcorners1" class="asiya">
+    <h1> Upload topic</h1>
+    <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+      <div>
+        <label for="title">Name of topic</label><br>
+        <input type="text" name="title"><br><br>
+      </div>
+      <div>
+        <label for="title">Target level</label><br>
+        <input type="text" name="level"><br><br>
+      </div>
+      <div>
+        <label for="title">Topic file</label><br>
+        <input maxlength="2000" type="file" name="upload" id="">
+      </div>
+      <button type="submit" name="submit" value="submit">Submit</button>
+    </form>
+  </div>
+</body>

@@ -1,8 +1,8 @@
 <?php
 
-require "./db_conn.php";
+require __DIR__ . "/db_conn.php";
 
-require '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation

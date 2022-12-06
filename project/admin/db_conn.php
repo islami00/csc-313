@@ -1,5 +1,5 @@
 <?php
-require '../config.php';
+require __DIR__ . '/../config.php';
 $host = 'localhost';
 $user = 'root';
 $dbname = 'project_test';
@@ -10,23 +10,3 @@ $dsn = "mysql:host=${host};dbname=${dbname}";
 $connection = new PDO($dsn, $user);
 $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-// INSERT INTO students (first_name, last_name, email, password, phone, gender, profile_pic, level) 
-        // VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)
-// PDO QUERY
-// :x means named parameters
-// $sql = 'INSERT INTO files VALUES (DEFAULT, :title, :path, :level);';
-// $stmt = $connection->prepare($sql);
-// $result = false;
-// if ($stmt) {
-// You define the parameters here in an associative array
-//   $result = $stmt->execute([':title' => $file_name, ':path' => $target_path, ':level' => $level]);
-// }
-// $result is true if it succeeds, react as needed
-// if ($result) {
-//   echo "Success";
-// } else {
-//   echo "Failure";
-// }
-echo "<p> server 2 </p>";
-echo APPROOT . '<br>';
-echo URLROOT . '<br>';
