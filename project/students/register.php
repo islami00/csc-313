@@ -213,7 +213,8 @@ if (isset($_POST['submit'])) {
       setcookie(
         $SESSION_COOKIE_KEY,
         $sessionId,
-        time() + 7 * $DAY
+        time() + 7 * $DAY,
+        '/'
       );
 
       $_SESSION[$sessionId] = $db->lastInsertId();
@@ -225,7 +226,6 @@ if (isset($_POST['submit'])) {
     $data['errorCode'] = 2; // upload error
   }
 }
-
 ?>
 
 

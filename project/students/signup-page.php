@@ -5,6 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CBT Portal | Register</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -58,7 +60,7 @@
         <div class="row mb-2">
           <div class="offset-md-2"></div>
           <div class="col-sm-6">
-            <h1>CBT Portal</h1>
+            <h1>Tutorial Portal Login</h1>
             <?php if ($data['errorCode'] !== -1) : ?>
 
               <p class="text-danger"><?php echo $data['errorMsg'] ?></p>
@@ -74,7 +76,7 @@
         <div class="row">
           <!-- left column -->
           <div class="offset-md-2"></div>
-          <div class="col-md-8">
+          <div class="col-md-8 mx-auto">
             <!-- jquery validation -->
             <div class="card card-dark">
               <div class="card-header">
@@ -90,27 +92,27 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">First name</label>
-                    <input type="text" name="firstname" class="form-control" id="exampleInputEmail1" placeholder="Enter first name" required><span class="text-red">*<?php echo $data['firstNameError']; ?></span>
+                    <input type="text" name="firstname" class="form-control" id="exampleInputEmail1" placeholder="Enter first name" required><span class="text-red"><?php echo $data['firstNameError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Last name</label>
-                    <input type="text" name="lastname" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red">*<?php echo $data['lastNameError']; ?></span>
+                    <input type="text" name="lastname" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red"><?php echo $data['lastNameError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red">*<?php echo $data['emailError']; ?></span>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red"><?php echo $data['emailError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="Enter username" required><span class="text-red">*<?php echo $data['usernameError']; ?></span>
+                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="Enter username" required><span class="text-red"><?php echo $data['usernameError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputEmail1" placeholder="Enter Password" required><span class="text-red">*<?php echo $data['passwordError']; ?></span>
+                    <input type="password" name="password" class="form-control" id="exampleInputEmail1" placeholder="Enter Password" required><span class="text-red"><?php echo $data['passwordError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Confirm Password</label>
-                    <input type="password" name="confirm_password" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red">*<?php echo $data['confirmPasswordError']; ?></span>
+                    <input type="password" name="confirm_password" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red"><?php echo $data['confirmPasswordError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Phone Number</label>
@@ -118,7 +120,7 @@
                   </div>
                   <div class="form-group">
                     <label>Gender</label>
-                    <select class="custom-select" name="gender" required>
+                    <select class="form-control" name="gender" required>
                       <option value="M">Male</option>
                       <option value="F">Female</option>
                       <option value="O">Other</option>
@@ -126,7 +128,7 @@
                   </div>
                   <div class="form-group">
                     <label>Level</label>
-                    <select class="custom-select" name="level" required>
+                    <select class="form-control" name="level" required>
                       <option value="beginner">Beginner</option>
                       <option value="intermediate">Intermediate</option>
                       <option value="expert">Expert</option>

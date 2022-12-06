@@ -48,7 +48,7 @@ try {
   <?php if (isset($message)) : ?>
     <p><?php echo $message ?></p>
   <?php endif ?>
-  <a href="<?php echo get_path("/logout"); ?>">Logout</a>
+  <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
 </body>
 
 

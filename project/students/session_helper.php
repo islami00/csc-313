@@ -1,6 +1,6 @@
 <?php
-require '../config.php';
-require 'Database.php';
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ .  '/Database.php';
 session_start();
 
 $MINUTE =  60;
