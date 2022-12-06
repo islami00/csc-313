@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php
 require 'session_helper.php';
-require 'Database.php';
+
 
 maybe_redirect();
 

@@ -145,9 +145,15 @@ if (isset($_POST['submit'])) {
     if (empty($data['username'])) {
       $data['usernameError'] =  'Please select a username';
     }
-    
-    if (checkUsername($data['username'])) {
+
+    if (checkField('username',
+      $data['username']
+    )) {
       $data['usernameError'] =  'Username already exists';
+    }
+    if (!empty($data['email']) && checkField('email', $data['email'])
+    ) {
+      $data['emailError'] =  'Email already exists';
     }
     // VALIDATION
     // validate image size. Size is calculated in Bytes
@@ -187,7 +193,7 @@ if (isset($_POST['submit'])) {
   if ($moved) {
     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    $db->prepare('INSERT INTO users (firstname, lastname, email, password, phone, gender, profile_picture, level,username) 
+    $db->prepare('INSERT INTO users (firstname, lastname, email, password, phone_number, gender, profile_picture, level,username) 
         VALUES (:firstname, :lastname, :email, :password, :phone, :gender, :profile_picture, :level,:username)');
 
     // bind value

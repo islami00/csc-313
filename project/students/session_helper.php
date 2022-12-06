@@ -1,6 +1,6 @@
 <?php
-require_once '../config.php';
-require_once 'Database.php';
+require '../config.php';
+require 'Database.php';
 session_start();
 
 function isLoggedIn()
@@ -34,16 +34,20 @@ function profilePicture()
     }
 }
 
-function checkUsername(string $username)
+function checkField(string $field, string $value)
 {
     $db = new Database;
-    $stmt = $db->prepare('SELECT * FROM users WHERE username=:username');
+    $stmt = $db->prepare("SELECT * FROM users WHERE :fieldname=':fieldvalue' ");
     if (!$stmt) return;
-    $db->bind(':username', $username);
+    $db->bind(':fieldvalue', $value);
+    $db->bind(':fieldname', $field);
+    var_dump($stmt);
     $db->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     // debug.
-    var_dump($result);
+    var_dump($stmt->errorInfo());
+    var_dump(!$result);
+    if (!$result) return true;
     return !empty($result);
 }
 
@@ -73,6 +77,6 @@ $MINUTE =  60;
 $HOUR = 60 * $MINUTE;
 $DAY = 24 * $HOUR;
 
-$SESSION_KEY = 'session';
+$SESSION_COOKIE_KEY = 'session';
 
 ?>
