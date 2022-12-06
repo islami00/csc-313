@@ -2,13 +2,16 @@
 
 require __DIR__ . '/students/session_helper.php';
 $sessionId = $_COOKIE[$SESSION_COOKIE_KEY];
+
+if (!isset($_COOKIE[$SESSION_COOKIE_KEY])) {
+  header("location: ${get_path('/')}");
+}
 unset($_SESSION[$sessionId]);
 setcookie(
   $SESSION_COOKIE_KEY,
   '',
   time() - 7 * $DAY
 );
-echo "Done";
+echo "Redirecting to home page...";
 
-var_dump($_SESSION);
-// header("location: ${get_path('/')}");
+header("location: .");
