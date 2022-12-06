@@ -99,12 +99,21 @@
                     <input type="text" name="lastname" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red"><?php echo $data['lastNameError']; ?></span>
                   </div>
                   <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="Enter username" required><span class="text-red"><?php echo $data['usernameError']; ?></span>
+                  </div>
+                  <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
                     <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" required><span class="text-red"><?php echo $data['emailError']; ?></span>
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputEmail1" placeholder="Enter username" required><span class="text-red"><?php echo $data['usernameError']; ?></span>
+                    <label>Level</label>
+                    <select class="form-control" name="level" required>
+                      <option value="beginner">Beginner</option>
+                      <option value="intermediate">Intermediate</option>
+                      <option value="expert">Expert</option>
+                    </select>
+                    <?php echo $data['levelError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Password</label>
@@ -116,24 +125,15 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Phone Number</label>
-                    <input type="tel" name="phone" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number" required><span class="text-red"><?php echo $data['phoneError']; ?></span>
+                    <input type="tel" name="phone" class="form-control" id="exampleInputEmail1" placeholder="Enter phone number"><span class="text-red"><?php echo $data['phoneError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label>Gender</label>
-                    <select class="form-control" name="gender" required>
+                    <select class="form-control" name="gender">
                       <option value="M">Male</option>
                       <option value="F">Female</option>
                       <option value="O">Other</option>
                     </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Level</label>
-                    <select class="form-control" name="level" required>
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="expert">Expert</option>
-                    </select>
-                    <?php echo $data['levelError']; ?></span>
                   </div>
 
                 </div>
