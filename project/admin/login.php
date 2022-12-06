@@ -4,9 +4,8 @@
 <?php
 
 require __DIR__ . '/../students/session_helper.php';
-session_start();
+
 $LOGIN_CSS = get_path("/public/astyle.css");
-include("connection.php");
 /**
  * Actionable:
  * 1. Use username column, and admin role.
@@ -29,22 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
     // need to set user.
-    $query = "select * from users where username = :user limit 1";
-    $result = mysqli_query($con, $query);
-
-    if ($result) {
-      if ($result && mysqli_num_rows($result) > 0) {
-        $user_data = mysqli_fetch_assoc($result);
-
+    $db = new Database;
+    $stmt = $db->prepare($GET_ONE_ADMIN_QUERY);
+    $db->bind(":userId", $user);
+    $result = $db->execute();
+    $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result && $user_data) {
         // hash password.
         if (validate_password($Password, $user_data['Password'])) {
           login($user_data['id']);
           header("Location: ${ADMIN_INDEX}");
           die;
         }
-      }
+    } else if ($stmt->rowCount() === 0) {
+      echo "User does not exist";
+    } else {
+      echo "incorrect username or password";
     }
-    echo "incorrect username or password";
   } else {
     echo "Please enter valid information.";
   }

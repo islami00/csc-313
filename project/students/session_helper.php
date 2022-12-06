@@ -8,7 +8,7 @@ $HOUR = 60 * $MINUTE;
 $DAY = 24 * $HOUR;
 
 $SESSION_COOKIE_KEY = 'session';
-
+$GET_ONE_ADMIN_QUERY = "SELECT * FROM `users` where `users`.`id` = :userId AND `users`.`role` = 'admin' LIMIT 1";
 function isLoggedIn()
 {
     // https: //www.cloudways.com/blog/php-session-security/
@@ -103,7 +103,8 @@ function get_current_student()
 }
 function get_current_admin()
 {
-    return get_current_appuser("SELECT * FROM `users` where `users`.`id` = :userId AND `users`.`role` = 'admin' LIMIT 1");
+    global $GET_ONE_ADMIN_QUERY;
+    return get_current_appuser($GET_ONE_ADMIN_QUERY);
 }
 /**
  * Log the user in by creating a session and setting a cookie.
