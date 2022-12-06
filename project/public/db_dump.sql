@@ -2,7 +2,7 @@ START TRANSACTION;
 CREATE TABLE `users`(
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `firstname` VARCHAR(255) NOT NULL,
-    `username` VARCHAR(255) NOT NULL,
+    `username` VARCHAR(255) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `lastname` VARCHAR(255) NOT NULL,
     `role` ENUM('admin','normal') NOT NULL DEFAULT 'normal' COMMENT 'admin,normal',
@@ -30,5 +30,6 @@ An alternative would have the files be urls and run a sql if we want to update t
 ALTER TABLE
     `topics` ADD CONSTRAINT `topics_admin_id_foreign` FOREIGN KEY(`admin_id`) REFERENCES `users`(`id`)
         ON DELETE SET NULL;
+
 ROLLBACK;
 -- COMMIT 

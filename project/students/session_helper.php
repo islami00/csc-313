@@ -3,6 +3,12 @@ require '../config.php';
 require 'Database.php';
 session_start();
 
+$MINUTE =  60;
+$HOUR = 60 * $MINUTE;
+$DAY = 24 * $HOUR;
+
+$SESSION_COOKIE_KEY = 'session';
+
 function isLoggedIn()
 {
     // https: //www.cloudways.com/blog/php-session-security/
@@ -60,23 +66,24 @@ function guidv4()
  */
 function get_current_appuser()
 {
+    global $SESSION_COOKIE_KEY;
     if (!isLoggedIn()) throw new Error("Unauthorized", 401);
-    $sessionId = $_COOKIE['session'];
+    $sessionId = $_COOKIE[$SESSION_COOKIE_KEY];
     $userId =  $_SESSION[$sessionId];
-
+    echo $userId;
     $db =  new Database;
-    $sql_user =  "SELECT * FROM `users` where `user`.id = ':userId' LIMIT 1";
+    $sql_user =  "SELECT * FROM `users` where `users`.`id` = :userId LIMIT 1";
     $stmt_user = $db->prepare($sql_user);
-    $db->bind(":userId", $userId);
-    if (!$db->execute()) return false;
+    if (!$db->bind(":userId", +$userId)) {
+        return false;
+    }
+    if (!$db->execute()) {
+        return false;
+    }
     $user = $stmt_user->fetch();
     return $user;
 }
 
-$MINUTE =  60;
-$HOUR = 60 * $MINUTE;
-$DAY = 24 * $HOUR;
 
-$SESSION_COOKIE_KEY = 'session';
 
 ?>
