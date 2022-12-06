@@ -3,6 +3,7 @@
 
 <?php
 
+require __DIR__ . '/../students/session_helper.php';
 session_start();
 
 include("connection.php");
