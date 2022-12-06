@@ -6,8 +6,9 @@ session_start();
 function isLoggedIn()
 {
     // https: //www.cloudways.com/blog/php-session-security/
+    if (!isset($_COOKIE['session'])) return false;
     $sessionId =  $_COOKIE['session'];
-    return !empty($_SESSION[$sessionId]);
+    return isset($_SESSION[$sessionId]);
 }
 
 function maybe_redirect()
@@ -33,20 +34,17 @@ function profilePicture()
     }
 }
 
-function isRegistered(int $studentId)
+function checkUsername(string $username)
 {
     $db = new Database;
-    $db->prepare('SELECT * FROM student WHERE id=:id');
-
-    $db->bind(':id', $studentId);
+    $stmt = $db->prepare('SELECT * FROM users WHERE username=:username');
+    if (!$stmt) return;
+    $db->bind(':username', $username);
     $db->execute();
-    $result = $db->single();
-
-    if ($result) {
-        return true;
-    } else {
-        return false;
-    }
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    // debug.
+    var_dump($result);
+    return !empty($result);
 }
 
 function guidv4()
@@ -58,6 +56,7 @@ function guidv4()
  */
 function get_current_appuser()
 {
+    if (!isLoggedIn()) throw new Error("Unauthorized", 401);
     $sessionId = $_COOKIE['session'];
     $userId =  $_SESSION[$sessionId];
 
@@ -70,5 +69,10 @@ function get_current_appuser()
     return $user;
 }
 
+$MINUTE =  60;
+$HOUR = 60 * $MINUTE;
+$DAY = 24 * $HOUR;
+
+$SESSION_KEY = 'session';
 
 ?>

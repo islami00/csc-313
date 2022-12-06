@@ -22,8 +22,9 @@ $data = [
   'lastName' => '',
   'phone' => '',
   'gender' => '',
-  'level' => '',
   'profilePic' => '',
+  'level' => '',
+  'username' => '',
   'emailError' => '',
   'passwordError' => '',
   'confirmPasswordError' => '',
@@ -33,7 +34,9 @@ $data = [
   'profilePicError' => '',
   'phoneError' => '',
   'levelError' => '',
+  'usernameError' => '',
   'errorCode' => -1,
+  'errorMsg' => '',
 ];
 function findStudentByEmail($email)
 {
@@ -61,6 +64,7 @@ if (isset($_POST['submit'])) {
     'phone' => trim($_POST['phone']),
     'gender' => trim($_POST['gender']),
     'level' => trim($_POST['level']),
+    'username' => trim($_POST['username']),
     'profilePic' => $_FILES['profilePic']
   ];
   // 1: Don't mutate globals. (unless it's fine.)
@@ -136,6 +140,13 @@ if (isset($_POST['submit'])) {
     if (empty($data['level'])) {
       $data['levelError'] = 'Please select a level';
     }
+    if (empty($data['username'])) {
+      $data['usernameError'] =  'Please select a username';
+    }
+    
+    if (checkUsername($data['username'])) {
+      $data['usernameError'] =  'Username already exists';
+    }
     // VALIDATION
     // validate image size. Size is calculated in Bytes
     if ($_FILES['profilePic']['size'] > 200000) {
@@ -154,6 +165,7 @@ if (isset($_POST['submit'])) {
     }
   } catch (\Throwable $th) {
     //validation error
+
     $data['errorCode'] = 0;
   }
 
@@ -187,8 +199,14 @@ if (isset($_POST['submit'])) {
     $db->bind(':level', $data['level']);
 
     if ($db->execute()) {
+      // do login
       $sessionId =  guidv4();
-      $_COOKIE['session'] =  $sessionId;
+      setcookie(
+        $SESSION_COOKIE_KEY,
+        $sessionId,
+        time() + 7 * $DAY
+      );
+
       $_SESSION[$sessionId] = $db->lastInsertId();
       header("location: ${STUDENTS}");
     } else {
