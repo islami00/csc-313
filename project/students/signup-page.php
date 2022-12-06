@@ -90,11 +90,11 @@
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">First name</label>
-                    <input type="text" name="first_name" class="form-control" id="exampleInputEmail1" placeholder="Enter first name" required><span class="text-red">*<?php echo $data['firstNameError']; ?></span>
+                    <input type="text" name="firstname" class="form-control" id="exampleInputEmail1" placeholder="Enter first name" required><span class="text-red">*<?php echo $data['firstNameError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Last name</label>
-                    <input type="text" name="last_name" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red">*<?php echo $data['lastNameError']; ?></span>
+                    <input type="text" name="lastname" class="form-control" id="exampleInputEmail1" placeholder="Enter last name" required><span class="text-red">*<?php echo $data['lastNameError']; ?></span>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>

@@ -61,8 +61,8 @@ if (isset($_POST['submit'])) {
     'email' => trim($_POST['email']),
     'password' => trim($_POST['password']),
     'confirmPassword' => trim($_POST['confirm_password']),
-    'firstName' => trim($_POST['first_name']),
-    'lastName' => trim($_POST['last_name']),
+    'firstName' => trim($_POST['firstname']),
+    'lastName' => trim($_POST['lastname']),
     'phone' => trim(maybe_get($_POST,'phone')),
     'gender' => trim(maybe_get($_POST, 'gender')), 
     'level' => trim($_POST['level']),
@@ -179,26 +179,27 @@ if (isset($_POST['submit'])) {
   if (!file_exists($upload_dir)) {
     mkdir($upload_dir);
   }
-  $target_file = $upload_dir . basename($profileImageName);
-  $moved = false;
-  if ($data['errorCode'] !== 0) {
+  $target_file = $upload_dir . $profileImageName;
+  $moved = true; // ignore by default.
+  if ($data['errorCode'] !== 0 && !empty($data['profilePic'])) {
     $moved  = move_uploaded_file($_FILES['profilePic']['tmp_name'], $target_file);
   }
   if ($moved) {
     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    $db->prepare('INSERT INTO student (first_name, last_name, email, password, phone, gender, profile_pic, level) 
-        VALUES (:first_name, :last_name, :email, :password, :phone, :gender, :profilePic, :level)');
+    $db->prepare('INSERT INTO users (firstname, lastname, email, password, phone, gender, profile_picture, level,username) 
+        VALUES (:firstname, :lastname, :email, :password, :phone, :gender, :profile_picture, :level,:username)');
 
     // bind value
-    $db->bind(':first_name', $data['firstName']);
-    $db->bind(':last_name', $data['lastName']);
+    $db->bind(':firstname', $data['firstName']);
+    $db->bind(':lastname', $data['lastName']);
     $db->bind(':email', $data['email']);
     $db->bind(':password', $data['password']);
-    $db->bind(':phone', $data['phone']);
-    $db->bind(':gender', $data['gender']);
-    $db->bind(':profilePic', $target_file);
+    $db->bind(':phone', empty_to_null($data['phone']));
+    $db->bind(':gender', empty_to_null($data['gender']));
+    $db->bind(':profile_picture', empty_to_null($profileImageName));
     $db->bind(':level', $data['level']);
+    $db->bind(':username', $data['username']);
 
     if ($db->execute()) {
       // do login
