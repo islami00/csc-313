@@ -14,6 +14,9 @@
     }
     ?>
   <?php endif ?>
+  <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
+
+
   <ul>
     <?php foreach ($result as  $value) : ?>
       <li>

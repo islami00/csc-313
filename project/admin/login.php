@@ -29,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     // need to set user.
     $db = new Database;
-    $stmt = $db->prepare($GET_ONE_ADMIN_QUERY);
-    $db->bind(":userId", $user);
+    $stmt = $db->prepare($GET_ONE_ADMIN_QUERY_BY_USERNAME);
+    $db->bind(":username", $user);
     $result = $db->execute();
     $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($result && $user_data) {
-        // hash password.
-        if (validate_password($Password, $user_data['Password'])) {
+      // hash password.
+      if (validate_password($Password, $user_data['password'])) {
           login($user_data['id']);
           header("Location: ${ADMIN_INDEX}");
           die;
