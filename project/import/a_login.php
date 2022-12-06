@@ -1,4 +1,7 @@
-<?php 
+<!DOCTYPE html>
+<html>
+
+<?php
 
 session_start();
 
@@ -11,12 +14,12 @@ include("connection.php");
  */
 
 $ADMIN_INDEX = get_path('/admin/index.php');
-  if($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
-    //SOMETHING WAS POSTED 
-    $user= $_POST['user'];
-    $Password=$_POST['Password'];
+  //SOMETHING WAS POSTED 
+  $user = $_POST['user'];
+  $Password = $_POST['Password'];
 
   if (!empty($user) && !empty($Password)) {
 
@@ -26,9 +29,9 @@ $ADMIN_INDEX = get_path('/admin/index.php');
 
     // need to set user.
     $query = "select * from users where username = :user limit 1";
-      $result = mysqli_query($con,$query);
+    $result = mysqli_query($con, $query);
 
-      if($result){
+    if ($result) {
       if ($result && mysqli_num_rows($result) > 0) {
         $user_data = mysqli_fetch_assoc($result);
 
@@ -39,37 +42,34 @@ $ADMIN_INDEX = get_path('/admin/index.php');
           die;
         }
       }
-      }
-      echo "incorrect username or password";
-
-      
-
-    }else{
-      echo "Please enter valid information.";
     }
+    echo "incorrect username or password";
+  } else {
+    echo "Please enter valid information.";
   }
+}
 
 
 
 
- ?>
+?>
 
-<!DOCTYPE html>
-<html>
 <head>
-<title>Admin Login</title>
-<link rel="stylesheet" type="text/css" href="astyle.css">
+  <title>Admin Login</title>
+  <link rel="stylesheet" type="text/css" href="astyle.css">
 </head>
+
 <body>
-<div class= "admin-login">
-<h1>Admin Login</h1>
-<form action="#" method="post">
-<p>User Name</p>
-<input type="text" name="user" placeholder="User Name">
-<p>Password</p>
-<input type="Password" name="Password" placeholder="Password">
-<button type="submit">Login</button>
-<a href="#">Forgot your password</a><br>
-</form>
-</div>
+  <div class="admin-login">
+    <h1>Admin Login</h1>
+    <form action="#" method="post">
+      <p>User Name</p>
+      <input type="text" name="user" placeholder="User Name">
+      <p>Password</p>
+      <input type="Password" name="Password" placeholder="Password">
+      <button type="submit">Login</button>
+    </form>
+  </div>
 </body>
+
+</html>
