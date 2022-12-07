@@ -44,7 +44,7 @@ function maybe_pass_admin()
 {
     $ADMIN_INDEX = get_path('/admin/index.php');
     $admin = get_current_admin();
-    maybe_pass($admin, $ADMIN_INDEX);
+    maybe_pass(!!$admin, $ADMIN_INDEX);
 }
 function maybe_redirect_admin()
 {
