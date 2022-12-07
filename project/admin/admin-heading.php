@@ -4,6 +4,7 @@
 require_once __DIR__ . "/../students/session_helper.php";
 $user = maybe_redirect_admin();
 $INDEX_CSS = get_path("/public/webdevelop.css");
+
 ?>
 
 <head>
@@ -13,6 +14,12 @@ $INDEX_CSS = get_path("/public/webdevelop.css");
   <link rel="stylesheet" href="<?php echo $INDEX_CSS ?>" />
   <title>Delete</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+
     /* duplicate. todo: rwemove */
     .hidden {
       /* https://www.a11yproject.com/posts/how-to-hide-content/ */
