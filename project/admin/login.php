@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($result && $user_data) {
       // hash password.
-      if (validate_password($Password, $user_data['password'])) {
+      if (password_verify($Password, $user_data['password'])) {
           login($user_data['id']);
           header("Location: ${ADMIN_INDEX}");
           die;

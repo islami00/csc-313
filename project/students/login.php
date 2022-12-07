@@ -25,22 +25,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     $db = new Database;
     $stmt = $db->prepare($GET_ONE_STUDENT_QUERY_BY_USERNAME);
-    echo $user;
     $db->bind(":username", $user);
     $result = $db->execute();
     $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($result && $user_data) {
       // hash password.
-      if (validate_password($Password, $user_data['password'])) {
+      if (password_verify($Password, $user_data['password'])) {
         login($user_data['id']);
         header("Location: ${STUDENT_INDEX}");
         die;
+      } else {
+        echo "incorrect username or password";
       }
     } else if ($stmt->rowCount() === 0) {
       echo "User does not exist";
     } else {
-      echo "incorrect username or password";
+      echo "Login Error, the server is unable to process your request";
     }
   } else {
     echo "Please enter valid information.";
