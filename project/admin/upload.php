@@ -5,6 +5,10 @@ require_once __DIR__ .  '/../students/session_helper.php';
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+if (!isset($result)) {
+  $ADMIN_UPLOAD = get_path("/admin/index.php");
+  header("Location:  ${ADMIN_UPLOAD}");
+}
 use Rakit\Validation\Validator;
 // https://github.com/rakit/validation
 $validator = new Validator();
