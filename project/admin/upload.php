@@ -11,7 +11,7 @@ $validator = new Validator();
 $rules = [
   'upload' => ['required', 'mimes:png,jpeg,pdf', "max:2M"],
   "level" => ['required'],
-  'submit' => 'required',
+  'submit-upload' => 'required',
 ];
 $validation = $validator->make($_POST + $_FILES, $rules);
 
@@ -56,7 +56,7 @@ function do_validate(User $admin_user)
 {
 
   global $validation, $message;
-  if (empty($_POST['submit'])) {
+  if (empty($_POST['submit-upload'])) {
     return null;
   }
   $validation->validate();
@@ -76,57 +76,47 @@ function do_validate(User $admin_user)
     $message = '<p>Error on file upload</p>';
   }
 }
-$user=maybe_redirect_admin();
+$user = maybe_redirect_admin();
 do_validate($user);
 ?>
-<!DOCTYPE html>
-<html lang="en">
+<?php if ($message !== null) : ?>
+  <p><?php echo $message; ?></p>
+<?php endif ?>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    @import "https://unpkg.com/open-props";
-    @import "https://unpkg.com/open-props/normalize.min.css";
-    @import "https://unpkg.com/open-props/buttons.min.css";
+<style>
+  @import "https://unpkg.com/open-props";
+  @import "https://unpkg.com/open-props/normalize.min.css";
+  @import "https://unpkg.com/open-props/buttons.min.css";
 
-    form {
-      color: rgb(4, 5, 65);
-    }
+  form {
+    color: rgb(4, 5, 65);
+  }
 
-    h1 {
-      color: #09243b;
-    }
+  h1 {
+    color: #09243b;
+  }
 
-    body {
-      background-color: lightslategrey;
-    }
+  body {
+    background-color: lightslategrey;
+  }
 
 
-    #rcorners1 {
+  #rcorners1 {
 
 
-      background: lavender;
-      border-style: groove;
-      width: 180px;
-      margin: 0px auto;
-      height: auto;
-      padding: 60px;
-      border: 2px solid #09243b;
-    }
-  </style>
-  <title>Upload</title>
-</head>
-
-<body>
-  <?php if ($message !== null) : ?>
-    <p><?php echo $message; ?></p>
-  <?php endif ?>
-
+    background: lavender;
+    border-style: groove;
+    width: 180px;
+    margin: 0px auto;
+    height: auto;
+    padding: 60px;
+    border: 2px solid #09243b;
+  }
+</style>
+<dialog id="upload-modal">
   <div id="rcorners1" class="asiya">
     <h1> Upload topic</h1>
-    <form enctype="multipart/form-data" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+    <form enctype="multipart/form-data" action="#" method="post">
       <div>
         <label for="title">Name of topic</label><br>
         <input type="text" name="title"><br><br>
@@ -143,7 +133,7 @@ do_validate($user);
         <label for="title">Topic file</label><br>
         <input maxlength="2000" type="file" name="upload" required>
       </div>
-      <button type="submit" name="submit" value="submit">Submit</button>
+      <button type="submit" name="submit-upload" value="submit-upload">Submit</button>
     </form>
   </div>
-</body>
+</dialog>

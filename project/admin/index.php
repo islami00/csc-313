@@ -40,13 +40,17 @@
         <button class="cancel-btn" type="button">Cancel</button>
       </form>
     </dialog>
+    <button id="upload-btn">Upload Course</button>
   </ul>
+  <?php require_once __DIR__ . '/upload.php' ?>
   <script>
     const buttons = document.querySelectorAll(".delete-btn");
+    const uploadBtn = document.querySelector("#upload-btn");
     const cancelBtn = document.querySelector("#modal .cancel-btn");
     const submitBtn = document.querySelector('#modal button[type="submit"]');
 
     const modal = document.querySelector(`#modal`);
+    const uploadModal = document.querySelector(`#upload-modal`);
     const idInput = document.querySelector('input[name="id"]');
     buttons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -55,6 +59,9 @@
         modal.showModal();
       });
     });
+    uploadBtn.addEventListener("click", () => {
+      uploadModal.showModal();
+    })
     cancelBtn.addEventListener("click", doClose);
     submitBtn.addEventListener("click", closeModal)
 
