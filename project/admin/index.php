@@ -66,7 +66,7 @@ $INDEX_CSS = get_path("/public/webdevelop.css")
       <p><?php echo $result ?></p>
     <?php endif ?>
   </div>
-  <button id="upload-btn">Upload Course</button>
+  <button id="upload-btn" class="btn_float">Upload Course</button>
   <dialog id="modal">
     <form method="POST" action="<?php $_SERVER['PHP_SELF'] ?>">
       <input hidden type="number" name="id">

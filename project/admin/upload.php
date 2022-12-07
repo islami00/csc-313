@@ -72,6 +72,7 @@ function do_validate_upload(User $admin_user)
   $success = do_upload($admin_user);
   if ($success) {
     $message = '<p>File uploaded successfully!</p>';
+    header("Location: .");
   } else {
     $message = '<p>Error on file upload</p>';
   }
@@ -80,6 +81,7 @@ function do_validate_upload(User $admin_user)
 do_validate_upload($user);
 ?>
 <?php if ($message !== null) : ?>
+  <!-- modal? -->
   <p><?php echo $message; ?></p>
 <?php endif ?>
 

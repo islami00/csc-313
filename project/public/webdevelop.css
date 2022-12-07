@@ -68,3 +68,8 @@ body {
   column-gap: 10px;
   align-items: center;
 }
+.btn_float {
+  position: fixed;
+  bottom: 1%;
+  right: 1%;
+}
