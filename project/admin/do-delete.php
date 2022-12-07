@@ -21,13 +21,13 @@ $validation = $validator->make($_POST + $_FILES, $rules);
 /**
  * @param number $id
  * 
- * Choose not to delete it from uploads because we acn have rm '/' like that.
+ * Choose not to delete it from uploads because we can have rm '/' like that.
  */
 function do_delete($id)
 {
-  global $connection;
-  $sql = "DELETE FROM files WHERE `files`.`id` = :id";
-  $stmt = $connection->prepare($sql);
+  $db  = new Database;
+  $sql = "DELETE FROM `topics` WHERE `topics`.`id` = :id";
+  $stmt = $db->prepare($sql);
   $result = false;
   if ($stmt) {
     $result = $stmt->execute([":id" => $id]);
@@ -57,8 +57,9 @@ function do_validate()
 }
 
 $messages  = do_validate();
-$sql = 'SELECT * FROM `files`';
-$stmt = $connection->prepare($sql);
+$sql = 'SELECT * FROM `topics`';
+$db = new Database;
+$stmt = $db->prepare($sql);
 $stmt->execute();
 $result = $stmt->fetchAll();
 ?>
