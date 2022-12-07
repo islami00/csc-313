@@ -17,7 +17,6 @@ function isLoggedIn()
     // https: //www.cloudways.com/blog/php-session-security/
     if (!isset($_COOKIE['session'])) return false;
     $sessionId =  $_COOKIE['session'];
-    var_dump($_SESSION);
     return isset($_SESSION[$sessionId]);
 }
 
@@ -28,13 +27,30 @@ function maybe_redirect()
         header("location: ${LOGIN}");
     }
 }
+
+function maybe_pass(bool $cond, string $route)
+{
+    if ($cond) {
+        header("location: ${route}");
+    }
+}
+function maybe_pass_student()
+{
+    $STUDENT_INDEX = get_path('/students/index.php');
+    maybe_pass(isLoggedIn(), $STUDENT_INDEX);
+}
+function maybe_pass_admin()
+{
+    $ADMIN_INDEX = get_path('/admin/index.php');
+    $admin = get_current_admin();
+    maybe_pass($admin, $ADMIN_INDEX);
 }
 function maybe_redirect_admin()
 {
-    $REGISTER = get_path('/students/register.php');
+    $LOGIN = get_path('/admin/login.php');
     $admin_user = get_current_admin();
     if (!$admin_user) {
-        header("location: ${REGISTER}");
+        header("location: ${LOGIN}");
         die;
     }
     return $admin_user;
@@ -62,12 +78,9 @@ function checkField(string $field, string $value)
     if (!$stmt) return;
     $db->bind(':fieldvalue', $value);
     $db->bind(':fieldname', $field);
-    var_dump($stmt);
     $db->execute();
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     // debug.
-    var_dump($stmt->errorInfo());
-    var_dump(!$result);
     if (!$result) return true;
     return !empty($result);
 }

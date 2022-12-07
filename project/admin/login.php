@@ -4,7 +4,7 @@
 <?php
 
 require __DIR__ . '/../students/session_helper.php';
-
+maybe_pass_admin();
 $LOGIN_CSS = get_path("/public/astyle.css");
 /**
  * Actionable:

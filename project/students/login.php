@@ -4,7 +4,7 @@
 <?php
 require __DIR__ . '/../students/session_helper.php';
 
-
+maybe_pass_student();
 $LOGIN_CSS = get_path("/public/style.css");
 
 $STUDENT_INDEX = get_path('/students/index.php');
