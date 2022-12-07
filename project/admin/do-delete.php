@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
 <?php
 
 require_once __DIR__ . "/../students/session_helper.php";

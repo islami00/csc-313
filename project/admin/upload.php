@@ -1,6 +1,6 @@
 <?php
+require_once '/admin-heading.php';
 
-require_once __DIR__ .  '/db_conn.php';
 require_once __DIR__ .  '/../students/session_helper.php';
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -52,7 +52,7 @@ function do_upload(User $admin)
 }
 
 $message = null;
-function do_validate(User $admin_user)
+function do_validate_upload(User $admin_user)
 {
 
   global $validation, $message;
@@ -76,8 +76,7 @@ function do_validate(User $admin_user)
     $message = '<p>Error on file upload</p>';
   }
 }
-$user = maybe_redirect_admin();
-do_validate($user);
+do_validate_upload($user);
 ?>
 <?php if ($message !== null) : ?>
   <p><?php echo $message; ?></p>
