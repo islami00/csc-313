@@ -3,6 +3,7 @@
 require_once './require.php';
 // PATHS
 $STUDENTS = get_path('/students/index.php');
+$ADMINS = get_path('/admin/index.php');
 $STUDENTS_REGISTER = get_path('/students/register.php');
 $STUDENTS_FOLDER = get_path('/students');
 // Route
@@ -27,6 +28,7 @@ $data = [
   'username' => '',
   'emailError' => '',
   'passwordError' => '',
+  'isAdmin' => false,
   'confirmPasswordError' => '',
   'firstNameError' => '',
   'lastNameError' => '',
@@ -60,6 +62,7 @@ if (isset($_POST['submit'])) {
     ...$data,     
     'email' => trim($_POST['email']),
     'password' => trim($_POST['password']),
+    'isAdmin' => filter_var($_POST['isAdmin'], FILTER_VALIDATE_BOOLEAN),
     'confirmPassword' => trim($_POST['confirm_password']),
     'firstName' => trim($_POST['firstname']),
     'lastName' => trim($_POST['lastname']),
@@ -193,8 +196,8 @@ if (isset($_POST['submit'])) {
   if ($moved) {
     $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    $db->prepare('INSERT INTO users (firstname, lastname, email, password, phone_number, gender, profile_picture, level,username) 
-        VALUES (:firstname, :lastname, :email, :password, :phone, :gender, :profile_picture, :level,:username)');
+    $db->prepare('INSERT INTO users (firstname, lastname, email, password, phone_number, gender, profile_picture, level,username, role) 
+        VALUES (:firstname, :lastname, :email, :password, :phone, :gender, :profile_picture, :level,:username,:role)');
 
     // bind value
     $db->bind(':firstname', $data['firstName']);
@@ -206,10 +209,20 @@ if (isset($_POST['submit'])) {
     $db->bind(':profile_picture', empty_to_null($profileImageName));
     $db->bind(':level', $data['level']);
     $db->bind(':username', $data['username']);
+    // Patch to include admins
+    $role = "normal";
+    if ($data["isAdmin"]) {
+      $role = "admin";
+    }
+    $db->bind(":role", $role);
 
     if ($db->execute()) {
       login($db->lastInsertId());
-      header("location: ${STUDENTS}");
+      if ($data['isAdmin']) {
+        header("location: ${ADMINS}");
+      } else {
+        header("location: ${STUDENTS}");
+      }
     } else {
       $data['errorCode'] = 1; // execute error
     }

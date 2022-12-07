@@ -12,6 +12,7 @@ $GET_ONE_ADMIN_QUERY_BY_ID = "SELECT * FROM `users` where `users`.`id` = :userId
 $GET_ONE_ADMIN_QUERY_BY_USERNAME = "SELECT * FROM `users` where `users`.`username` = :username AND `users`.`role` = 'admin' LIMIT 1";
 $GET_ONE_STUDENT_QUERY_BY_USERNAME = "SELECT * FROM `users` where `users`.`username` = :username AND `users`.`role` = 'normal'  LIMIT 1";
 $GET_ONE_STUDENT_QUERY_BY_ID = "SELECT * FROM `users` where `users`.`id` = :userId AND `users`.`role` = 'normal'  LIMIT 1";
+
 function isLoggedIn()
 {
     // https: //www.cloudways.com/blog/php-session-security/

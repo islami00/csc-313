@@ -1,5 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+require_once __DIR__ . "/../config.php";
+if (!isset($data)) {
+  $REGISTER = get_path("/students/register.php");
+  header("location: ${REGISTER}");
+}
+?>
 
 <head>
   <meta charset="utf-8">
@@ -135,6 +142,11 @@
                       <option value="O">Other</option>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label class="form-check-label">Is Admin</label>
+                    <input type="checkbox" class="form-check-input" name="isAdmin" id="admin-base">
+                    <input type="hidden" name="isAdmin" id="admin-default" value="off">
+                  </div>
 
                 </div>
 
@@ -204,7 +216,15 @@
 }
     */
   const form_data = JSON.parse('<?php echo json_encode($data); ?>');
-  console.log(form_data);
+  const admin = document.querySelector("#admin-base");
+  const adminHidden = document.querySelector("#admin-default");
+  admin.addEventListener("change", function(ev) {
+    if (this.checked) {
+      adminHidden.setAttribute("name", "");
+    } else {
+      adminHidden.setAttribute("name", "isAdmin");
+    }
+  })
 </script>
 
 </html>
