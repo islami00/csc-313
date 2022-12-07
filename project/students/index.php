@@ -52,7 +52,19 @@ $INDEX_CSS = get_path("/public/webdevelop.css")
       <line x1="12" y1="4" x2="12" y2="16"></line>
     </symbol>
   </svg>
-  <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
+
+  <nav class="nav">
+    <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
+    <div class="user-info">
+      <div>
+        <img class="user-img" />
+      </div>
+      <div>
+        <p><?php echo  $user->username ?></p>
+        <p><?php echo $user->level ?></p>
+      </div>
+    </div>
+  </nav>
   <div class="title-list">
     <?php if (gettype($result) === "array") : ?>
       <?php foreach ($result as $result_item) : ?>

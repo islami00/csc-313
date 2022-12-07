@@ -2,6 +2,8 @@
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
+	font-family: "Arial", sans-serif;
+
 }
 .icon {
   width: 20px;
@@ -21,10 +23,24 @@ border:  3px solid black;
 .title-row:not(:first-of-type){
   margin-top: 15px;
 }
+.hidden {
+  /* https://www.a11yproject.com/posts/how-to-hide-content/ */
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* webdevelop.css | http://localhost:3005/project/public/webdevelop.css */
+
+
 
 .nav {
-  border: 3px solid black;
-  border-radius:10px;
+  border-top: 3px solid black;
+  border-bottom: 3px solid black;
   padding: 10px;
     display: flex;
   justify-content: space-between;
@@ -44,11 +60,8 @@ body {
   min-height: 100vh;
 }
 .title-list{
-	font-family: "Arial", sans-serif;
-	border: 3px solid black;
 	min-height: 100%;
 	min-width: 100%;
   min-height: 100vh;
-  border-radius: 10px;
 	padding: 20px;
 }
