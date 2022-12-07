@@ -207,14 +207,16 @@ if (isset($_POST['submit'])) {
     $db->bind(':phone', empty_to_null($data['phone']));
     $db->bind(':gender', empty_to_null($data['gender']));
     $db->bind(':profile_picture', empty_to_null($profileImageName));
-    $db->bind(':level', $data['level']);
     $db->bind(':username', $data['username']);
     // Patch to include admins
     $role = "normal";
+    $level = $data['level'];
     if ($data["isAdmin"]) {
       $role = "admin";
+      $level = "expert";
     }
     $db->bind(":role", $role);
+    $db->bind(':level', $level);
 
     if ($db->execute()) {
       login($db->lastInsertId());
