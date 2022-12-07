@@ -96,13 +96,14 @@ do_validate_upload($user);
     color: #09243b;
   }
 
+  .upload_overlay {
+    width: 100%;
+    height: 100%;
+  }
 
   #rcorners1 {
-
-
     background: lavender;
     border-style: groove;
-    width: 180px;
     margin: 0px auto;
     height: auto;
     padding: 60px;
@@ -110,26 +111,28 @@ do_validate_upload($user);
   }
 </style>
 <dialog id="upload-modal">
-  <div id="rcorners1" class="asiya">
-    <h1> Upload topic</h1>
-    <form enctype="multipart/form-data" action="#" method="post">
-      <div>
-        <label for="title">Name of topic</label><br>
-        <input type="text" name="title"><br><br>
-      </div>
-      <div class="form-group">
-        <label for="level">Target level</label>
-        <select class="form-control" name="level" required>
-          <option value="beginner">Beginner</option>
-          <option value="intermediate">Intermediate</option>
-          <option value="expert">Expert</option>
-        </select>
-      </div>
-      <div>
-        <label for="title">Topic file</label><br>
-        <input maxlength="2000" type="file" name="upload" required>
-      </div>
-      <button type="submit" name="submit-upload" value="submit-upload">Submit</button>
-    </form>
+  <div class="upload_overlay">
+    <div id="rcorners1" class="asiya">
+      <h1> Upload topic</h1>
+      <form enctype="multipart/form-data" action="#" method="post">
+        <div>
+          <label for="title">Name of topic</label><br>
+          <input type="text" name="title"><br><br>
+        </div>
+        <div class="form-group">
+          <label for="level">Target level</label>
+          <select class="form-control" name="level" required>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="expert">Expert</option>
+          </select>
+        </div>
+        <div>
+          <label for="title">Topic file</label><br>
+          <input maxlength="2000" type="file" name="upload" required>
+        </div>
+        <button type="submit" name="submit-upload" value="submit-upload">Submit</button>
+      </form>
+    </div>
   </div>
 </dialog>
