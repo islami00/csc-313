@@ -31,6 +31,7 @@ try {
   $result  = "Error getting course content";
 }
 
+$INDEX_CSS = get_path("/public/webdevelop.css")
 ?>
 <html lang="en">
 
@@ -39,6 +40,10 @@ try {
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student view</title>
+  <link rel="stylesheet" href="<?php echo $INDEX_CSS ?>" />
+</head>
+
+<body>
   <svg width="0" height="0" class="hidden">
     <symbol xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" id="download">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -47,35 +52,30 @@ try {
       <line x1="12" y1="4" x2="12" y2="16"></line>
     </symbol>
   </svg>
-</head>
-
-<body>
-
   <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
-  <div class="icon-wrap">
-    <div class="title-list">
-      <?php if (gettype($result) === "array") : ?>
-        <?php foreach ($result as $result_item) : ?>
-          <?php
-          $name = $result_item->uploaded_file_name;
-          $title = $result_item->title;
-          $path =  get_upload_path("/${name}");
-          ?>
+  <div class="title-list">
+    <?php if (gettype($result) === "array") : ?>
+      <?php foreach ($result as $result_item) : ?>
+        <?php
+        $name = $result_item->uploaded_file_name;
+        $title = $result_item->title;
+        $path =  get_upload_path("/${name}");
+        ?>
 
-          <div class="title-row">
-            <p><?php echo $title ?></p>
-            <a class="icon-small" href="<?php echo $path ?>">
-              <svg class="icon">
-                <use xlink:href="#download"></use>
-              </svg>
-            </a>
-          </div>
-        <?php endforeach ?>
-      <?php endif ?>
-      <?php if (gettype($result) === "string") : ?>
-        <p><?php echo $result ?></p>
-      <?php endif ?>
-    </div>
+        <div class="title-row">
+          <p><?php echo $title ?></p>
+          <a class="icon-small" href="<?php echo $path ?>">
+            <svg class="icon">
+              <use xlink:href="#download"></use>
+            </svg>
+          </a>
+        </div>
+      <?php endforeach ?>
+    <?php endif ?>
+    <?php if (gettype($result) === "string") : ?>
+      <p><?php echo $result ?></p>
+    <?php endif ?>
+  </div>
 </body>
 
 
