@@ -30,6 +30,7 @@ try {
 } catch (\Throwable $th) {
   $result  = "Error getting course content";
 }
+$INDEX_CSS = get_path("/public/webdevelop.css")
 
 ?>
 <html lang="en">

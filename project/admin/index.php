@@ -3,7 +3,7 @@ require_once __DIR__ . "/admin-heading.php";
 require_once __DIR__ . "/do-delete.php";
 maybe_redirect_admin();
 
-$INDEX_CSS = get_path("/public/webdevelop.css")
+$INDEX_CSS = get_path("/public/webdevelop.css");
 
 ?>
 
