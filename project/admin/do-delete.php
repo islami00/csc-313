@@ -55,9 +55,19 @@ function do_validate()
 }
 
 $messages  = do_validate();
-$sql = 'SELECT * FROM `topics`';
-$db = new Database;
-$stmt = $db->prepare($sql);
-$stmt->execute();
-$result = $stmt->fetchAll();
+function get_topics()
+{
+  global $user;
+  if (!$user) return "User does not exist";
+  $db =  new Database;
+  $sql = "SELECT * FROM `topics`";
+  $stmt = $db->prepare($sql);
+  if (!$stmt) return "Error fetching topics";
+  $db->execute();
+  $result = $stmt->fetchAll();
+  if (!$result) return "No topics available";
+  return $result;
+}
+
+$result = get_topics();
 ?>
