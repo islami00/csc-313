@@ -71,12 +71,12 @@ $INDEX_CSS = get_path("/public/webdevelop.css")
         <?php
         $name = $result_item->uploaded_file_name;
         $title = $result_item->title;
-        $path =  get_upload_path("/${name}");
+        $path =  get_path("/uploads/${name}");
         ?>
 
         <div class="title-row">
           <p><?php echo $title ?></p>
-          <a class="icon-small" href="<?php echo $path ?>">
+          <a class="icon-small" href="<?php echo $path ?>" download>
             <svg class="icon">
               <use xlink:href="#download"></use>
             </svg>
