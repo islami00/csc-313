@@ -113,7 +113,8 @@ function get_current_appuser(string $sql_user)
     if (!$db->execute()) {
         return false;
     }
-    $user = $stmt_user->fetch();
+    $_user = $stmt_user->fetch();
+    $user = new User($_user->id, $_user->firstname, $_user->username, $_user->password, $_user->lastname, $_user->role, $_user->level);
     return $user;
 }
 function get_current_student()

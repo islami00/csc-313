@@ -41,7 +41,7 @@ function do_validate()
   }
   $validation->validate();
   if ($validation->fails()) {
-    var_dump($validation->errors()->all("<p>:message</p>"));
+    // var_dump($validation->errors()->all("<p>:message</p>"));
     return ['<p>Error on input validation</p>'];
   }
   $id =  $_POST['id'];

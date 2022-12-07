@@ -1,5 +1,5 @@
 <?php
-require_once '/admin-heading.php';
+require_once __DIR__ . '/admin-heading.php';
 
 require_once __DIR__ .  '/../students/session_helper.php';
 
@@ -76,6 +76,7 @@ function do_validate_upload(User $admin_user)
     $message = '<p>Error on file upload</p>';
   }
 }
+
 do_validate_upload($user);
 ?>
 <?php if ($message !== null) : ?>

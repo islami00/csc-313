@@ -99,6 +99,16 @@ class User
     public string $lastname;
     public string $role;
     public string $level;
+    public function __construct(int $id, string $firstname, string  $username, string $password, string $lastname, string $role, string $level)
+    {
+        $this->id = $id;
+        $this->firstname = $firstname;
+        $this->username = $username;
+        $this->password = $password;
+        $this->lastname = $lastname;
+        $this->role = $role;
+        $this->level = $level;
+    }
 }
 
 ?>
