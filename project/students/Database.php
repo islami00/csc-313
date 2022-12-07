@@ -22,6 +22,7 @@ class Database {
 
         try {
             $connection = new PDO($conn, $this->dbUser, $this->dbPass, $options);
+            
             $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
             $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $this->dbHandler = $connection;

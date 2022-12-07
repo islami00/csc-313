@@ -101,7 +101,7 @@ function guidv4()
 function get_current_appuser(string $sql_user)
 {
     global $SESSION_COOKIE_KEY;
-    if (!isLoggedIn()) throw new Error("Unauthorized", 401);
+    if (!isLoggedIn()) return false;
     $sessionId = $_COOKIE[$SESSION_COOKIE_KEY];
     $userId =  $_SESSION[$sessionId];
     $db =  new Database;

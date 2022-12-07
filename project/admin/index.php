@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__ . "/admin-heading.php";
 require_once __DIR__ . "/do-delete.php";
-$user = maybe_redirect_admin();
+  maybe_redirect_admin();
+
 
 ?>
 
