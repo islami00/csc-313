@@ -51,12 +51,14 @@ $INDEX_CSS = get_path("/public/webdevelop.css")
 
         <div class="title-row">
           <p><?php echo $title ?></p>
-          <a class="icon-small" href="<?php echo $path ?>" download>
-            <svg class="icon">
-              <use xlink:href="#download"></use>
-            </svg>
-          </a>
-          <button type="button" class="delete-btn" data-modalid="<?php echo $key ?>">Delete</button>
+          <div class="btn_grp">
+            <a class="icon-small" href="<?php echo $path ?>" download>
+              <svg class="icon">
+                <use xlink:href="#download"></use>
+              </svg>
+            </a>
+            <button type="button" class="delete-btn" data-modalid="<?php echo $key ?>">Delete</button>
+          </div>
         </div>
       <?php endforeach ?>
     <?php endif ?>

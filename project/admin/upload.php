@@ -96,10 +96,6 @@ do_validate_upload($user);
     color: #09243b;
   }
 
-  body {
-    background-color: lightslategrey;
-  }
-
 
   #rcorners1 {
 
