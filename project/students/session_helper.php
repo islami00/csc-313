@@ -23,10 +23,11 @@ function isLoggedIn()
 
 function maybe_redirect()
 {
-    $REGISTER = get_path('/students/register.php');
+    $LOGIN = get_path('/students/login.php');
     if (!isLoggedIn()) {
-        header("location: ${REGISTER}");
+        header("location: ${LOGIN}");
     }
+}
 }
 function maybe_redirect_admin()
 {

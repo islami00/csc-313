@@ -4,7 +4,9 @@
 <?php
 require './config.php';
 $ADMIN_LOGIN = get_path("/admin/login.php");
-$STUDENT_LOGIN = get_path("/students/login.php"); ?>
+$STUDENT_LOGIN = get_path("/students/login.php");
+session_start();
+?>
 
 <head>
     <meta charset="UTF-8">
