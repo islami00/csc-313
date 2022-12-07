@@ -18,7 +18,7 @@ function get_topics()
   if (!$stmt) return "Error fetching topics";
 
   $db->bind(":level", $user->level);
-
+  $db->execute();
   $result = $stmt->fetchAll();
   if (!$result) return "No topics available";
   return $result;
