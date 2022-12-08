@@ -5,7 +5,7 @@
 
 require __DIR__ . '/../students/session_helper.php';
 maybe_pass_admin();
-$LOGIN_CSS = get_path("/public/astyle.css");
+$LOGIN_CSS = get_path("/public/style.css");
 /**
  * Actionable:
  * 1. Use username column, and admin role.
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 
 <body>
-  <div class="admin-login">
+  <div class="user-login">
     <h1>Admin Login</h1>
     <form action="#" method="post">
       <p>User Name</p>
