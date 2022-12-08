@@ -81,7 +81,9 @@ function do_validate_upload(User $admin_user)
     $message = '<p>Error on file upload</p>';
   }
 }
-
+$BYTE = 8;
+$KB =  1024 * $BYTE;
+$MB =  1024 * $KB;
 do_validate_upload($user);
 ?>
 <?php if ($message !== null) : ?>
@@ -131,7 +133,7 @@ do_validate_upload($user);
         </div>
         <div>
           <label for="title">Topic file</label><br>
-          <input maxlength="2000" type="file" name="upload" required>
+          <input maxlength="<?php echo 2 * $MB ?>" type="file" name="upload" required>
         </div>
         <button type="submit" name="submit-upload" value="submit-upload">Submit</button>
       </form>
