@@ -100,9 +100,18 @@ do_validate_upload($user);
     color: #09243b;
   }
 
-  .upload_overlay {
-    width: 100%;
-    height: 100%;
+  .upload-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  /* added,. */
+
+  .upload-form>div {
+    display: flex;
+    column-gap: 10px;
+    align-items: center;
   }
 
   #rcorners1 {
@@ -112,20 +121,26 @@ do_validate_upload($user);
     height: auto;
     padding: 60px;
     border: 2px solid #09243b;
+    /* added,. */
+  }
+
+  #rcorners1>h1 {
+    /* added,. */
+    margin-bottom: 10px;
   }
 </style>
 <dialog id="upload-modal">
   <div class="upload_overlay">
     <div id="rcorners1" class="asiya">
       <h1> Upload topic</h1>
-      <form enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
+      <form enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF'] ?>" method="post" class="upload-form">
         <div>
-          <label for="title">Name of topic</label><br>
-          <input type="text" name="title"><br><br>
+          <label for="title">Name of topic</label>
+          <input type="text" name="title">
         </div>
-        <div class="form-group">
+        <div>
           <label for="level">Target level</label>
-          <select class="form-control" name="level" required>
+          <select name="level" required>
             <option value="beginner">Beginner</option>
             <option value="intermediate">Intermediate</option>
             <option value="expert">Expert</option>
