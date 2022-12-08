@@ -36,10 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($result && $user_data) {
       // hash password.
       if (password_verify($Password, $user_data['password'])) {
-          login($user_data['id']);
-          header("Location: ${ADMIN_INDEX}");
-          die;
-        }
+        login($user_data['id']);
+        header("Location: ${ADMIN_INDEX}");
+        die;
+      }
     } else if ($stmt->rowCount() === 0) {
       echo "User does not exist";
     } else {
@@ -57,6 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 <head>
   <title>Admin Login</title>
+  <style>
+    :root {
+      --background-img: url(<?php echo get_path("/public/IN.jpeg") ?>);
+    }
+  </style>
   <link rel="stylesheet" type="text/css" href="<?php echo $LOGIN_CSS; ?>">
 </head>
 

@@ -56,6 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 <head>
   <title>User Login</title>
+  <style>
+    :root {
+      --background-img: url(<?php echo get_path("/public/IN.jpeg") ?>);
+    }
+  </style>
   <link rel="stylesheet" type="text/css" href="<?php echo $LOGIN_CSS ?>">
 </head>
 
