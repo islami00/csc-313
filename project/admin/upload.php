@@ -77,7 +77,6 @@ function do_validate_upload(User $admin_user)
   $success = do_upload($admin_user);
   if ($success) {
     $message = '<p>File uploaded successfully!</p>';
-    header("Location: .");
   } else {
     $message = '<p>Error on file upload</p>';
   }
@@ -91,10 +90,6 @@ do_validate_upload($user);
 <?php endif ?>
 
 <style>
-  @import "https://unpkg.com/open-props";
-  @import "https://unpkg.com/open-props/normalize.min.css";
-  @import "https://unpkg.com/open-props/buttons.min.css";
-
   form {
     color: rgb(4, 5, 65);
   }
@@ -121,7 +116,7 @@ do_validate_upload($user);
   <div class="upload_overlay">
     <div id="rcorners1" class="asiya">
       <h1> Upload topic</h1>
-      <form enctype="multipart/form-data" action="#" method="post">
+      <form enctype="multipart/form-data" action="<?php $_SERVER['PHP_SELF'] ?>" method="post">
         <div>
           <label for="title">Name of topic</label><br>
           <input type="text" name="title"><br><br>
