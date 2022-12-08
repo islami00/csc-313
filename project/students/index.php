@@ -64,7 +64,7 @@ $INDEX_CSS = get_path("/public/webdevelop.css")
     <a href="<?php echo get_path("/logout.php"); ?>">Logout</a>
     <div class="user-info">
       <div>
-        <img class="user-img" />
+        <img src="https://avatars.dicebear.com/api/initials/<?php echo $user->firstname . $user->lastname ?>.svg" class="user-img" />
       </div>
       <div>
         <p><?php echo  $user->username ?></p>
